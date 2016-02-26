@@ -5,7 +5,8 @@
 //---------------------------------------------------------------------
 
 // PublicKey=MicrosoftPublicKeyFull
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Test.Edm.TDD.Tests" + AssemblyRef.TestPublicKey)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Core.Tests" + AssemblyRef.TestPublicKey)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Edm.Tests" + AssemblyRef.TestPublicKey)]
 #pragma warning disable 436
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("EdmLibTests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("EdmLibTests.SL" + AssemblyRef.TestPublicKey)]
