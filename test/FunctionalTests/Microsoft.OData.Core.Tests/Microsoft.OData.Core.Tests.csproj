@@ -227,7 +227,9 @@
     <Compile Include="ScenarioTests\UriBuilder\TopAndSkipBuilderTests.cs" />
     <Compile Include="ScenarioTests\UriBuilder\UriBuilderTestBase.cs" />
     <Compile Include="ScenarioTests\UriBuilder\UrlBuilderWithParameterAliasTests.cs" />
+    <Compile Include="ScenarioTests\UriParser\BuiltInUriFunctionsTests.cs" />
     <Compile Include="ScenarioTests\UriParser\CountFunctionalTests.cs" />
+    <Compile Include="ScenarioTests\UriParser\CustomUriFunctionsTests.cs" />
     <Compile Include="ScenarioTests\UriParser\EntityIdFunctionalTests.cs" />
     <Compile Include="ScenarioTests\UriParser\EntityReferenceFunctionalTests.cs" />
     <Compile Include="ScenarioTests\UriParser\EnumFilterFunctionalTests.cs" />
@@ -247,8 +249,13 @@
     <Compile Include="ScenarioTests\UriParser\SpatialFuntionalTests.cs" />
     <Compile Include="ScenarioTests\UriParser\TopAndSkipFunctionalTests.cs" />
     <Compile Include="ScenarioTests\UriParser\VerificationHelpers.cs" />
+    <Compile Include="ScenarioTests\Writer\JsonLight\WriteFeedWithoutNavigationSourceTests.cs" />
     <Compile Include="UriParser\Binders\MetadataBindingUtilsTests.cs" />
     <Compile Include="UriParser\ExpressionLexerTests.cs" />
+    <Compile Include="UriParser\Extensions\Binders\ApplyBinderTests.cs" />
+    <Compile Include="UriParser\Extensions\SyntacticAst\AggregateStatementTokenTests.cs" />
+    <Compile Include="UriParser\Extensions\SyntacticAst\AggregateTokenTests.cs" />
+    <Compile Include="UriParser\Extensions\SyntacticAst\GroupByTokenTests.cs" />
     <Compile Include="UriParser\LiteralUtilsTests.cs" />
     <Compile Include="UriParser\Metadata\CaseInsensitiveBuiltinIdentifierTests.cs" />
     <Compile Include="UriParser\Metadata\CaseInsensitiveResolverTests.cs" />

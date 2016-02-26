@@ -26,11 +26,17 @@ namespace Microsoft.OData.Core
     /// </summary>
     internal abstract class ODataWriterCore : ODataWriter, IODataOutputInStreamErrorListener
     {
+        /// <summary>The writer validator to use.</summary>
+        protected readonly IWriterValidator WriterValidator;
+
         /// <summary>The output context to write to.</summary>
         private readonly ODataOutputContext outputContext;
 
         /// <summary>True if the writer was created for writing a feed; false when it was created for writing an entry.</summary>
         private readonly bool writingFeed;
+
+        /// <summary>True if the writer was created for writing a delta response; false otherwise.</summary>
+        private readonly bool writingDelta;
 
         /// <summary>If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</summary>
         private readonly IODataReaderWriterListener listener;
@@ -54,18 +60,23 @@ namespace Microsoft.OData.Core
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingFeed">True if the writer is created for writing a feed; false when it is created for writing an entry.</param>
+        /// <param name="writingDelta">True if the writer is created for writing a delta response; false otherwise.</param>
         /// <param name="listener">If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</param>
         protected ODataWriterCore(
             ODataOutputContext outputContext,
             IEdmNavigationSource navigationSource,
             IEdmEntityType entityType,
             bool writingFeed,
+            bool writingDelta = false,
             IODataReaderWriterListener listener = null)
         {
             Debug.Assert(outputContext != null, "outputContext != null");
+            Debug.Assert(!writingDelta || outputContext.WritingResponse, "writingResponse must be true when writingDelta is true");
 
             this.outputContext = outputContext;
             this.writingFeed = writingFeed;
+            this.writingDelta = writingDelta;
+            this.WriterValidator = outputContext.WriterValidator;
 
             // create a collection validator when writing a top-level feed and a user model is present
             if (this.writingFeed && this.outputContext.Model.IsUserModel())
@@ -778,7 +789,7 @@ namespace Microsoft.OData.Core
             }
 
             // TODO: Clean up handling of expected types/sets during writing
-            return (IEdmEntityType)TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, entry.TypeName, EdmTypeKind.Entity);
+            return (IEdmEntityType)TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, entry.TypeName, EdmTypeKind.Entity, this.WriterValidator);
         }
 
         /// <summary>
@@ -883,7 +894,7 @@ namespace Microsoft.OData.Core
                         if (parentNavigationLinkScope != null)
                         {
                             // Validate the consistency of entity types in the expanded feed/entry
-                            WriterValidationUtils.ValidateEntryInExpandedLink(entityType, parentNavigationLinkScope.EntityType);
+                            this.WriterValidator.ValidateEntryInExpandedLink(entityType, parentNavigationLinkScope.EntityType);
                             entryScope.EntityTypeFromMetadata = parentNavigationLinkScope.EntityType;
                         }
                         else if (this.CurrentFeedValidator != null)
@@ -972,7 +983,7 @@ namespace Microsoft.OData.Core
                         if (!this.SkipWriting)
                         {
                             ODataFeed feed = (ODataFeed)currentScope.Item;
-                            WriterValidationUtils.ValidateFeedAtEnd(feed, !this.outputContext.WritingResponse);
+                            this.WriterValidator.ValidateFeedAtEnd(feed, !this.outputContext.WritingResponse);
                             this.EndFeed(feed);
                         }
 
@@ -1067,7 +1078,7 @@ namespace Microsoft.OData.Core
             {
                 this.InterceptException(() =>
                 {
-                    WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
+                    this.WriterValidator.ValidateEntityReferenceLink(entityReferenceLink);
                     this.WriteEntityReferenceInNavigationLinkContent((ODataNavigationLink)this.CurrentScope.Item, entityReferenceLink);
                 });
             }
@@ -1151,7 +1162,7 @@ namespace Microsoft.OData.Core
                 this.InterceptException(() =>
                 {
                     IEdmNavigationProperty navigationProperty =
-                        WriterValidationUtils.ValidateNavigationLink(currentNavigationLink, this.ParentEntryEntityType, contentPayloadKind, !this.outputContext.MessageWriterSettings.EnableFullValidation);
+                        this.WriterValidator.ValidateNavigationLink(currentNavigationLink, this.ParentEntryEntityType, contentPayloadKind);
                     if (navigationProperty != null)
                     {
                         this.CurrentScope.EntityType = navigationProperty.ToEntityType();
@@ -1286,7 +1297,7 @@ namespace Microsoft.OData.Core
             IEdmNavigationSource navigationSource = null;
             IEdmEntityType entityType = null;
             SelectedPropertiesNode selectedProperties = currentScope.SelectedProperties;
-            ODataUri odataUri = currentScope.ODataUri.Clone();
+            ODataUri odataUri = currentScope.ODataUri;
 
             if (newState == WriterState.Entry || newState == WriterState.Feed)
             {
@@ -1295,6 +1306,15 @@ namespace Microsoft.OData.Core
             }
 
             WriterState currentState = currentScope.State;
+
+            if (this.writingDelta)
+            {
+                // When writing expanded feeds in delta response, we start with the parent delta entry.
+                // But what we really want in the payload are only the navigation links and expanded feeds
+                // so we need to skip writing the top-level delta entry including its structural properties
+                // and instance annotations.
+                skipWriting = currentState == WriterState.Start && newState == WriterState.Entry;
+            }
 
             // When writing a navigation link, check if the link is being projected.
             // If we are projecting properties, but the nav. link is not projected mark it to skip its content.
@@ -1312,8 +1332,10 @@ namespace Microsoft.OData.Core
 
                     if (this.outputContext.WritingResponse)
                     {
+                        odataUri = currentScope.ODataUri.Clone();
+
                         IEdmEntityType currentEntityType = currentScope.EntityType;
-                        IEdmNavigationProperty navigationProperty = WriterValidationUtils.ValidateNavigationLink(navigationLink, currentEntityType, /*payloadKind*/null, !this.outputContext.MessageWriterSettings.EnableFullValidation);
+                        IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNavigationLink(navigationLink, currentEntityType, /*payloadKind*/null);
                         if (navigationProperty != null)
                         {
                             entityType = navigationProperty.ToEntityType();

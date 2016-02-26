@@ -92,6 +92,9 @@ namespace Microsoft.OData.Core {
         internal const string ODataWriterCore_InvalidTransitionFromExpandedLink = "ODataWriterCore_InvalidTransitionFromExpandedLink";
         internal const string ODataWriterCore_InvalidTransitionFromCompleted = "ODataWriterCore_InvalidTransitionFromCompleted";
         internal const string ODataWriterCore_InvalidTransitionFromError = "ODataWriterCore_InvalidTransitionFromError";
+        internal const string ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty = "ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty";
+        internal const string ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty = "ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty";
+        internal const string ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState = "ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState";
         internal const string ODataWriterCore_WriteEndCalledInInvalidState = "ODataWriterCore_WriteEndCalledInInvalidState";
         internal const string ODataWriterCore_OnlyTopLevelFeedsSupportCount = "ODataWriterCore_OnlyTopLevelFeedsSupportCount";
         internal const string ODataWriterCore_QueryCountInRequest = "ODataWriterCore_QueryCountInRequest";
@@ -645,6 +648,7 @@ namespace Microsoft.OData.Core {
         internal const string ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue = "ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue";
         internal const string ODataJsonLightValueSerializer_MissingTypeNameOnComplex = "ODataJsonLightValueSerializer_MissingTypeNameOnComplex";
         internal const string ODataJsonLightValueSerializer_MissingTypeNameOnCollection = "ODataJsonLightValueSerializer_MissingTypeNameOnCollection";
+        internal const string ODataJsonLightValueSerializer_MissingRawValueOnUntyped = "ODataJsonLightValueSerializer_MissingRawValueOnUntyped";
         internal const string AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement = "AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement";
         internal const string AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType = "AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType";
         internal const string AtomInstanceAnnotation_AttributeValueNotationUsedOnNonEmptyElement = "AtomInstanceAnnotation_AttributeValueNotationUsedOnNonEmptyElement";
@@ -717,7 +721,7 @@ namespace Microsoft.OData.Core {
         internal const string ApplyBinder_UnsupportedType = "ApplyBinder_UnsupportedType";
         internal const string ApplyBinder_UnsupportedGroupByChild = "ApplyBinder_UnsupportedGroupByChild";
         internal const string FunctionCallBinder_CannotFindASuitableOverload = "FunctionCallBinder_CannotFindASuitableOverload";
-        internal const string FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent = "FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent";
+        internal const string FunctionCallBinder_UriFunctionMustHaveHaveNullParent = "FunctionCallBinder_UriFunctionMustHaveHaveNullParent";
         internal const string FunctionCallBinder_CallingFunctionOnOpenProperty = "FunctionCallBinder_CallingFunctionOnOpenProperty";
         internal const string FunctionCallParser_DuplicateParameterOrEntityKeyName = "FunctionCallParser_DuplicateParameterOrEntityKeyName";
         internal const string ODataUriParser_InvalidCount = "ODataUriParser_InvalidCount";
@@ -749,6 +753,10 @@ namespace Microsoft.OData.Core {
         internal const string Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity = "Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity";
         internal const string Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum = "Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum";
         internal const string ExpandTreeNormalizer_NonPathInPropertyChain = "ExpandTreeNormalizer_NonPathInPropertyChain";
+        internal const string UriExpandParser_TermIsNotValidForStar = "UriExpandParser_TermIsNotValidForStar";
+        internal const string UriExpandParser_TermIsNotValidForStarRef = "UriExpandParser_TermIsNotValidForStarRef";
+        internal const string UriExpandParser_ParentEntityIsNull = "UriExpandParser_ParentEntityIsNull";
+        internal const string UriExpandParser_TermWithMultipleStarNotAllowed = "UriExpandParser_TermWithMultipleStarNotAllowed";
         internal const string UriSelectParser_TermIsNotValid = "UriSelectParser_TermIsNotValid";
         internal const string UriSelectParser_InvalidTopOption = "UriSelectParser_InvalidTopOption";
         internal const string UriSelectParser_InvalidSkipOption = "UriSelectParser_InvalidSkipOption";
@@ -772,7 +780,7 @@ namespace Microsoft.OData.Core {
         internal const string PathParser_EntityReferenceNotSupported = "PathParser_EntityReferenceNotSupported";
         internal const string PathParser_CannotUseValueOnCollection = "PathParser_CannotUseValueOnCollection";
         internal const string PathParser_TypeMustBeRelatedToSet = "PathParser_TypeMustBeRelatedToSet";
-        internal const string PathParser_TypeCastOnlyAllowedAfterEntityCollection = "PathParser_TypeCastOnlyAllowedAfterEntityCollection";
+        internal const string PathParser_TypeCastOnlyAllowedAfterStructuralCollection = "PathParser_TypeCastOnlyAllowedAfterStructuralCollection";
         internal const string ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink = "ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink";
         internal const string ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty = "ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty";
         internal const string ODataExpandPath_InvalidExpandPathSegment = "ODataExpandPath_InvalidExpandPathSegment";
@@ -791,6 +799,9 @@ namespace Microsoft.OData.Core {
         internal const string FunctionOverloadResolver_MultipleOperationOverloads = "FunctionOverloadResolver_MultipleOperationOverloads";
         internal const string FunctionOverloadResolver_FoundInvalidOperation = "FunctionOverloadResolver_FoundInvalidOperation";
         internal const string FunctionOverloadResolver_FoundInvalidOperationImport = "FunctionOverloadResolver_FoundInvalidOperationImport";
+        internal const string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload = "CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload";
+        internal const string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature = "CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature";
+        internal const string CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists = "CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists";
         internal const string RequestUriProcessor_InvalidValueForEntitySegment = "RequestUriProcessor_InvalidValueForEntitySegment";
         internal const string RequestUriProcessor_InvalidValueForKeySegment = "RequestUriProcessor_InvalidValueForKeySegment";
         internal const string RequestUriProcessor_EmptySegmentInRequestUrl = "RequestUriProcessor_EmptySegmentInRequestUrl";
@@ -818,6 +829,9 @@ namespace Microsoft.OData.Core {
         internal const string ExceptionUtils_CheckIntegerPositive = "ExceptionUtils_CheckIntegerPositive";
         internal const string ExceptionUtils_CheckLongPositive = "ExceptionUtils_CheckLongPositive";
         internal const string ExceptionUtils_ArgumentStringNullOrEmpty = "ExceptionUtils_ArgumentStringNullOrEmpty";
+        internal const string ExpressionToken_OnlyRefAllowWithStarInExpand = "ExpressionToken_OnlyRefAllowWithStarInExpand";
+        internal const string ExpressionToken_NoPropAllowedAfterRef = "ExpressionToken_NoPropAllowedAfterRef";
+        internal const string ExpressionToken_NoSegmentAllowedBeforeStarInExpand = "ExpressionToken_NoSegmentAllowedBeforeStarInExpand";
         internal const string ExpressionToken_IdentifierExpected = "ExpressionToken_IdentifierExpected";
         internal const string ExpressionLexer_UnterminatedStringLiteral = "ExpressionLexer_UnterminatedStringLiteral";
         internal const string ExpressionLexer_InvalidCharacter = "ExpressionLexer_InvalidCharacter";

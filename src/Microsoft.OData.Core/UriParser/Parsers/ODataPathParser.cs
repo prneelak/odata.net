@@ -13,14 +13,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>
@@ -430,23 +429,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The parent nodes key segment.</returns>
         private KeySegment FindPreviousKeySegment()
         {
-            // make sure that the we've actually parsed enough segments for one of them to be a key segment..
-            if (parsedSegments.Count > 2)
-            {
-                // then get the segment 2 behind this one as a KeySegment. 
-                // It MUST be EXACTLY 2 segments before this one because
-                // the key will exist on the parent nav prop from this path.
-                // 
-                // if that particular segment isnt a Key Segment then we simply return null
-                // because it can't be cast into KeySegment.
-                return this.parsedSegments[this.parsedSegments.Count - 2] as KeySegment;
-            }
-            else
-            {
-                // if there aren't enough segments, then simply return null because there is no
-                // KeySegment to return.
-                return null;
-            }
+            return (KeySegment)this.parsedSegments.LastOrDefault(s => s is KeySegment);
         }
 
         /// <summary>
@@ -1140,7 +1123,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
                 else
                 {
-                    throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedAfterEntityCollection(identifier));
+                    // Complex collection supports type cast too.
+                    var actualComplexTypeOfTheTypeSegment = actualTypeOfTheTypeSegment as IEdmComplexType;
+                    if (actualComplexTypeOfTheTypeSegment != null)
+                    {
+                        actualTypeOfTheTypeSegment = new EdmCollectionType(new EdmComplexTypeReference(actualComplexTypeOfTheTypeSegment, false));
+                    }
+                    else
+                    {
+                        throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedAfterStructuralCollection(identifier));
+                    }
                 }
             }
 
@@ -1249,7 +1241,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return string.Equals(
                 expected,
                 identifier,
-                this.configuration.EnableCaseInsensitiveBuiltinIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+                this.configuration.EnableCaseInsensitiveUriFunctionIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
     }
 }

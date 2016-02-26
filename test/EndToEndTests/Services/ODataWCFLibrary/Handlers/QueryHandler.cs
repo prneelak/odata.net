@@ -88,8 +88,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
             if (queryResults == null)
             {
-                // For individual property or $value
-                if (this.QueryContext.Target.Property != null)
+                // For individual property or $value includes navigation properties or $ref if the relationship terminates on a single entity
+                // If the relationship terminates on a collection, TypeKind will be Collection and an empty collection will be returned.
+                if (this.QueryContext.Target.Property != null 
+                    || this.QueryContext.Target.TypeKind == EdmTypeKind.Entity)
                 {
                     // Protocol 9.1.4 Response Code 204 No Content
                     // A request returns 204 No Content if the requested resource has the null value, 
@@ -170,7 +172,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
                     ODataWriter resultWriter = messageWriter.CreateODataFeedWriter(entitySet, entityType);
 
-                    ResponseWriter.WriteFeed(resultWriter, iEnumerableResults, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, this.QueryContext.DeltaLink, this.QueryContext.NextLink, this.RequestHeaders);
+                    ResponseWriter.WriteFeed(resultWriter, entityType, iEnumerableResults, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, this.QueryContext.DeltaLink, this.QueryContext.NextLink, this.RequestHeaders);
                     resultWriter.Flush();
                 }
                 else if (this.QueryContext.Target.NavigationSource != null && this.QueryContext.Target.TypeKind == EdmTypeKind.Entity)

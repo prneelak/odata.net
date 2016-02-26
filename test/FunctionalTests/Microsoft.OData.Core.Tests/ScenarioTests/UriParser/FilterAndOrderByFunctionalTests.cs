@@ -359,6 +359,46 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseFilterWithPrimitiveCollectionCount()
+        {
+            var filterQueryNode = ParseFilter("MyDates/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                And.Left.ShouldBeCollectionCountNode().
+                    And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDatesProp());
+        }
+
+        [Fact]
+        public void ParseFilterWithComplexCollectionCount()
+        {
+            var filterQueryNode = ParseFilter("PreviousAddresses/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                And.Left.ShouldBeCollectionCountNode().
+                    And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
+        }
+       
+        [Fact]
+        public void ParseFilterWithEnumCollectionCount()
+        {
+            var filterQueryNode = ParseFilter("FavoriteColors/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                And.Left.ShouldBeCollectionCountNode().
+                    And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonFavoriteColorsProp());
+        }
+        
+        [Fact]
+        public void ParseFilterWithEntityCollectionCount()
+        {
+            var filterQueryNode = ParseFilter("MyFriendsDogs/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                And.Left.ShouldBeCollectionCountNode().
+                    And.Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
+        }
+
+        [Fact]
         public void CompareComplexWithNull()
         {
             var filter = ParseFilter("MyAddress eq null", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
@@ -425,7 +465,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         {
             Action parse = () => ParseFilter("MyPeople/Any()", HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType());
 
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent("Any"));
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("Any"));
         }
 
         [Fact]
@@ -775,10 +815,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             // regression test for: [UriParser] day() allowed. What does that mean?
             // make sure that, if we do find a cannonical function, we match its parameters. 
             Action parseWithInvalidParameters = () => ParseFilter("day() eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetBuiltInFunctionSignatures("day"); // to match the error message... blah
+            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetUriFunctionSignatures("day"); // to match the error message... blah
             parseWithInvalidParameters.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     "day",
-                    BuiltInFunctions.BuildFunctionSignatureListDescription("day", signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
         }
 
         [Fact]
@@ -787,10 +827,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             // regression test for: [UriParser] day() allowed. What does that mean?
             // make sure that, if we do find a cannonical function, we match its parameters. 
             Action parseWithInvalidParameters = () => ParseFilter("day(1) eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetBuiltInFunctionSignatures("day"); // to match the error message... blah
+            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetUriFunctionSignatures("day"); // to match the error message... blah
             parseWithInvalidParameters.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     "day",
-                    BuiltInFunctions.BuildFunctionSignatureListDescription("day", signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
         }
 
         [Fact]
@@ -1059,6 +1099,77 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         {
             Action parseWithAction = () => ParseFilter("Move", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             parseWithAction.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "Move"));
+        }
+
+        [Fact]
+        public void AggregatedPropertyTreatedAsOpenProperty()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$filter", "Total"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var filterClause = odataQueryOptionParser.ParseFilter();
+            filterClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+        }
+
+        [Fact]
+        public void AggregatedPropertiesTreatedAsOpenProperty()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$filter", "Total ge 10 and Max le 2"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total, StockQuantity with max as Max)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var filterClause = odataQueryOptionParser.ParseFilter();
+            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+            var leftBinaryOperatorNode =
+                binaryOperatorNode.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual).And;
+            var rightBinaryOperatorNode =
+                binaryOperatorNode.Right.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual).And;
+            leftBinaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+            rightBinaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Max");
+        }
+
+        [Fact]
+        public void AggregatedPropertyTreatedAsOpenPropertyInOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "Total asc"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+        }
+
+        [Fact]
+        public void AggregatedPropertiesTreatedAsOpenPropertyInOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "Total asc, Max desc"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total, StockQuantity with max as Max)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+            orderByClause = orderByClause.ThenBy;
+            orderByClause.Direction.Should().Be(OrderByDirection.Descending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Max");
         }
 
         [Fact]

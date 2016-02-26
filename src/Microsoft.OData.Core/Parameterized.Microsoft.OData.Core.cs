@@ -197,6 +197,27 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. State transition is not allowed while writing an expanded navigation property."
+        /// </summary>
+        internal static string ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. Expanded navigation property can only be written within a delta entry."
+        /// </summary>
+        internal static string ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "WriteStart(expandedFeed) was called in an invalid state ('{0}'); WriteStart(expandedFeed) is only supported in state 'ExpandedNavigationProperty'."
+        /// </summary>
+        internal static string ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState, p0);
+        }
+
+        /// <summary>
         /// A string like "ODataWriter.WriteEnd was called in an invalid state ('{0}'); WriteEnd is only supported in states 'Entry', 'Feed', 'NavigationLink', and 'NavigationLinkWithContent'."
         /// </summary>
         internal static string ODataWriterCore_WriteEndCalledInInvalidState(object p0) {
@@ -4442,6 +4463,17 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "A raw value was not provided for an instance of ODataUntypedValue."
+        /// </summary>
+        internal static string ODataJsonLightValueSerializer_MissingRawValueOnUntyped
+        {
+            get
+            {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightValueSerializer_MissingRawValueOnUntyped);
+            }
+        }
+
+        /// <summary>
         /// A string like "Encountered an 'annotation' element without a 'term' attribute. All 'annotation' elements must have a 'term' attribute."
         /// </summary>
         internal static string AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement {
@@ -4964,7 +4996,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "$applg/groupby not support '{0}' as child transformation"
+        /// A string like "$apply/groupby not support '{0}' as child transformation"
         /// </summary>
         internal static string ApplyBinder_UnsupportedGroupByChild(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_UnsupportedGroupByChild, p0);
@@ -4978,10 +5010,10 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "Found a built-in function '{0}' with a parent token. Built-in functions cannot have parent tokens."
+        /// A string like "Found a Uri function '{0}' with a parent token. Uri functions cannot have parent tokens."
         /// </summary>
-        internal static string FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent, p0);
+        internal static string FunctionCallBinder_UriFunctionMustHaveHaveNullParent(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.FunctionCallBinder_UriFunctionMustHaveHaveNullParent, p0);
         }
 
         /// <summary>
@@ -5232,6 +5264,38 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "Term '{0}' is not valid in a $expand expression, as only level option is allowed when expand navigation property is star."
+        /// </summary>
+        internal static string UriExpandParser_TermIsNotValidForStar(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriExpandParser_TermIsNotValidForStar, p0);
+        }
+
+        /// <summary>
+        /// A string like "Term '{0}' is not valid in a $expand expression, no option is allowed when expand navigation property is */$ref."
+        /// </summary>
+        internal static string UriExpandParser_TermIsNotValidForStarRef(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriExpandParser_TermIsNotValidForStarRef, p0);
+        }
+
+        /// <summary>
+        /// A string like "Can not get parent entity type for Term '{0}' to auto populate all navigation properties."
+        /// </summary>
+        internal static string UriExpandParser_ParentEntityIsNull(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriExpandParser_ParentEntityIsNull, p0);
+        }
+
+        /// <summary>
+        /// A string like "Term '{0}' is not valid in a $expand expression as multiple stars are not allowed."
+        /// </summary>
+        internal static string UriExpandParser_TermWithMultipleStarNotAllowed(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriExpandParser_TermWithMultipleStarNotAllowed, p0);
+        }
+
+        /// <summary>
         /// A string like "Term '{0}' is not valid in a $select or $expand expression."
         /// </summary>
         internal static string UriSelectParser_TermIsNotValid(object p0) {
@@ -5401,10 +5465,11 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "Type cast segment '{0}' after a collection which is not of entity type is not allowed."
+        /// A string like "Type cast segment '{0}' after a collection which is not of entity or complex type is not allowed."
         /// </summary>
-        internal static string PathParser_TypeCastOnlyAllowedAfterEntityCollection(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.PathParser_TypeCastOnlyAllowedAfterEntityCollection, p0);
+        internal static string PathParser_TypeCastOnlyAllowedAfterStructuralCollection(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.PathParser_TypeCastOnlyAllowedAfterStructuralCollection, p0);
         }
 
         /// <summary>
@@ -5545,6 +5610,27 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string FunctionOverloadResolver_FoundInvalidOperationImport(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.FunctionOverloadResolver_FoundInvalidOperationImport, p0);
+        }
+
+        /// <summary>
+        /// A string like "The given custom function '{0}' already exists as a Built-In function. Consider use 'addAsOverloadToBuiltInFunction = true' parameter."
+        /// </summary>
+        internal static string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload, p0);
+        }
+
+        /// <summary>
+        /// A string like "The given custom function '{0}' already exists as a Built-In function in one of it's overloads. Thus cannot override the Built-In function."
+        /// </summary>
+        internal static string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature, p0);
+        }
+
+        /// <summary>
+        /// A string like "The given function name '{0}' already exists as a custom function with the same overload."
+        /// </summary>
+        internal static string CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists, p0);
         }
 
         /// <summary>
@@ -5749,6 +5835,38 @@ namespace Microsoft.OData.Core {
         internal static string ExceptionUtils_ArgumentStringNullOrEmpty {
             get {
                 return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ExceptionUtils_ArgumentStringNullOrEmpty);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Only $ref is allowed with star in expand option."
+        /// </summary>
+        internal static string ExpressionToken_OnlyRefAllowWithStarInExpand
+        {          
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ExpressionToken_OnlyRefAllowWithStarInExpand);
+            }
+        }
+
+        /// <summary>
+        /// A string like "No property is allowed after $ref segment."
+        /// </summary>
+        internal static string ExpressionToken_NoPropAllowedAfterRef
+        {
+            get
+            {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ExpressionToken_NoPropAllowedAfterRef);
+            }
+        }
+
+        /// <summary>
+        /// A string like "No segment is allowed before star in $expand."
+        /// </summary>
+        internal static string ExpressionToken_NoSegmentAllowedBeforeStarInExpand
+        {
+            get
+            {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
             }
         }
 

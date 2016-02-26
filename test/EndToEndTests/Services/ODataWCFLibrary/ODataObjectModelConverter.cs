@@ -80,7 +80,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             entry.TypeName = element.GetType().Namespace + "." + typeName;
 
             // TODO: work around for now
-            if (!(entitySource is IEdmContainedEntitySet))
+            if (entitySource != null && !(entitySource is IEdmContainedEntitySet))
             {
                 Uri entryUri = BuildEntryUri(element, entitySource, targetVersion);
                 if (element.GetType().BaseType != null && entitySource.EntityType().Name != typeName)
@@ -138,6 +138,16 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 link.Id = Url;
             }
 
+            // This is workaround now to make Photo/$ref works or it will fail validation as it is MediaEntity but no stream
+            if (Utility.IsMediaEntity(element.GetType()))
+            {
+                var streamProvider = DataSourceManager.GetCurrentDataSource().StreamProvider;
+                link.MediaResource = new ODataStreamReferenceValue()
+                {
+                    ContentType = streamProvider.GetContentType(element),
+                    ETag = streamProvider.GetETag(element),
+                };
+            }
             return link;
         }
 
@@ -416,11 +426,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     var collectionValue = p.Value as ODataCollectionValue;
                     if (collectionValue != null && !collectionValue.Items.Cast<object>().Any())
                     {
-                        targetProperty.SetValue(newInstance, Utility.QuickCreateInstance(targetProperty.PropertyType), new object[] { }); 
+                        targetProperty.SetValue(newInstance, Utility.QuickCreateInstance(targetProperty.PropertyType), new object[] { });
                     }
                     else
                     {
-                        targetProperty.SetValue(newInstance, ConvertPropertyValue(p.Value), new object[] { });   
+                        targetProperty.SetValue(newInstance, ConvertPropertyValue(p.Value), new object[] { });
                     }
                 }
 

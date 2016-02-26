@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core.Tests.Json
         public const string CollectionOutput = "FAKE_COLLECTION_VALUE_";
 
         public Action<ODataComplexValue, IEdmTypeReference, bool, bool, DuplicatePropertyNamesChecker> WriteComplexVerifier { get; set; }
-        public Action<ODataCollectionValue, IEdmTypeReference, bool, bool, bool> WriteCollectionVerifier { get; set; }
+        public Action<ODataCollectionValue, IEdmTypeReference, IEdmTypeReference, bool, bool, bool> WriteCollectionVerifier { get; set; }
         public Action<object, IEdmTypeReference> WritePrimitiveVerifier { get; set; }
         public Action WriteNullVerifier { get; set; }
 
@@ -54,16 +54,22 @@ namespace Microsoft.OData.Core.Tests.Json
             throw new NotImplementedException();
         }
 
-        public void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
+        public void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
         {
             this.WriteCollectionVerifier.Should().NotBeNull("WriteCollectionValue was called.");
-            this.WriteCollectionVerifier(collectionValue, metadataTypeReference, isTopLevelProperty, isInUri, isOpenPropertyType);
+            this.WriteCollectionVerifier(collectionValue, metadataTypeReference, valueTypeReference, isTopLevelProperty, isInUri, isOpenPropertyType);
         }
 
         public void WritePrimitiveValue(object value, IEdmTypeReference expectedTypeReference)
         {
             this.WritePrimitiveVerifier.Should().NotBeNull("WritePrimitiveValue was called.");
             this.WritePrimitiveVerifier(value, expectedTypeReference);
+        }
+
+        public void WriteUntypedValue(ODataUntypedValue value)
+        {
+            this.WritePrimitiveVerifier.Should().NotBeNull("WriteUntypedValue was called.");
+            this.WritePrimitiveVerifier(value, null);
         }
 
         public DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()

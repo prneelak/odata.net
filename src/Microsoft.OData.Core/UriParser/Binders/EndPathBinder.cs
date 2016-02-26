@@ -41,24 +41,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// This method generates a <see cref="SingleValueOpenPropertyAccessNode"/> for properties of open type
-        /// </summary>
-        /// <param name="endPathToken">EndPathToken to bind into an open property node.</param>
-        /// <param name="parentNode">Parent node of this open property</param>
-        /// <returns>Will return a <see cref="SingleValueOpenPropertyAccessNode"/> when open types are supported</returns>
-        internal static SingleValueOpenPropertyAccessNode GeneratePropertyAccessQueryForOpenType(EndPathToken endPathToken, SingleValueNode parentNode)
-        {
-            if (parentNode.TypeReference != null && !parentNode.TypeReference.Definition.IsOpenType())
-            {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
-                    parentNode.TypeReference.FullName(),
-                    endPathToken.Identifier));
-            }
-
-            return new SingleValueOpenPropertyAccessNode(parentNode, endPathToken.Identifier);
-        }
-
-        /// <summary>
         /// Generates a bound query node representing an <see cref="IEdmProperty"/> given an already semantically bound parent node.
         /// </summary>
         /// <param name="parentNode">The semantically bound source node of this end path token</param>
@@ -115,6 +97,28 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
+        /// This method generates a <see cref="SingleValueOpenPropertyAccessNode"/> for properties of open type
+        /// </summary>
+        /// <param name="endPathToken">EndPathToken to bind into an open property node.</param>
+        /// <param name="parentNode">Parent node of this open property</param>
+        /// <returns>Will return a <see cref="SingleValueOpenPropertyAccessNode"/> when open types are supported</returns>
+        internal SingleValueOpenPropertyAccessNode GeneratePropertyAccessQueryForOpenType(EndPathToken endPathToken, SingleValueNode parentNode)
+        {
+            if (parentNode.TypeReference == null || 
+                parentNode.TypeReference.Definition.IsOpenType() || 
+                IsAggregatedProperty(endPathToken.Identifier))
+            {
+                return new SingleValueOpenPropertyAccessNode(parentNode, endPathToken.Identifier);
+            }
+            else
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
+                    parentNode.TypeReference.FullName(),
+                    endPathToken.Identifier));
+            }
+        }
+
+        /// <summary>
         /// Binds a an end path token into a PropertyAccessToken, OpenPropertyToken, or FunctionCallToken.
         /// </summary>
         /// <param name="endPathToken">The property access token to bind.</param>
@@ -135,6 +139,15 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, parent, state, out boundFunction))
                 {
                     return boundFunction;
+                }
+
+                // Collection with any or all expression is already supported and handled separately.
+                // Add support of collection with $count segment.
+                CollectionNode colNode = parent as CollectionNode;
+                if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment))
+                {
+                    // create a collection count node for collection node property.
+                    return new CollectionCountNode(colNode);
                 }
 
                 throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(endPathToken.Identifier));
@@ -181,6 +194,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 RangeVariable implicitRangeVariable = state.ImplicitRangeVariable;
                 return NodeFactory.CreateRangeVariableReferenceNode(implicitRangeVariable);
             }
+        }
+
+        /// <summary>
+        /// Determines the token if represents an aggregated property or not.
+        /// </summary>
+        /// <param name="identifier">Tokon identifier.</param>
+        /// <returns>Whether the token represents an aggregated property.</returns>
+        private bool IsAggregatedProperty(string identifier)
+        {
+            return (state.AggregatedPropertyNames != null && state.AggregatedPropertyNames.Contains(identifier));
         }
     }
 }

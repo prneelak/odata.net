@@ -59,6 +59,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingFeed">true if the writer is created for writing a feed; false when it is created for writing an entry.</param>
         /// <param name="writingParameter">true if the writer is created for writing a parameter; false otherwise.</param>
+        /// <param name="writingDelta">True if the writer is created for writing delta response; false otherwise.</param>
         /// <param name="listener">If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</param>
         internal ODataJsonLightWriter(
             ODataJsonLightOutputContext jsonLightOutputContext,
@@ -66,8 +67,9 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmEntityType entityType,
             bool writingFeed,
             bool writingParameter = false,
+            bool writingDelta = false,
             IODataReaderWriterListener listener = null)
-            : base(jsonLightOutputContext, navigationSource, entityType, writingFeed, listener)
+            : base(jsonLightOutputContext, navigationSource, entityType, writingFeed, writingDelta, listener)
         {
             Debug.Assert(jsonLightOutputContext != null, "jsonLightOutputContext != null");
 
@@ -311,14 +313,14 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     // write "odata.actions" metadata
                     IEnumerable<ODataAction> actions = feed.Actions;
-                    if (actions != null)
+                    if (actions != null && actions.Any())
                     {
                         this.jsonLightEntryAndFeedSerializer.WriteOperations(actions.Cast<ODataOperation>(), /*isAction*/ true);
                     }
 
                     // write "odata.functions" metadata
                     IEnumerable<ODataFunction> functions = feed.Functions;
-                    if (functions != null)
+                    if (functions != null && functions.Any())
                     {
                         this.jsonLightEntryAndFeedSerializer.WriteOperations(functions.Cast<ODataOperation>(), /*isAction*/ false);
                     }
@@ -488,7 +490,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else
             {
-                WriterValidationUtils.ValidateNavigationLinkHasCardinality(navigationLink);
+                this.WriterValidator.ValidateNavigationLinkHasCardinality(navigationLink);
             }
         }
 
