@@ -49,7 +49,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                 details = this.TestsHelper.QueryFeed("Products?$filter=CoverColors/$count lt 2", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(2, details.Count);
+                    Assert.AreEqual(1, details.Count);
                 }
 
                 // $count collection of complex type
@@ -63,7 +63,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                 details = this.TestsHelper.QueryFeed("Customers?$filter=Orders/$count lt 2", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(2, details.Count);
+                    Assert.AreEqual(1, details.Count);
                 }
             }
         }
