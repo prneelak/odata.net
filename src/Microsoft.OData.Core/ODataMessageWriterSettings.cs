@@ -216,6 +216,9 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Don't serialize null values
         /// </summary>
+        /// <remarks>
+        /// Default valus is false, that means serialize null values.
+        /// </remarks>
         public bool IgnoreNullValues { get; set; }
 
         /// <summary>

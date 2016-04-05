@@ -479,7 +479,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         TypeName = "TestModel.CustomerType",
                         Properties = new ODataProperty[]
                         {
-                            new ODataProperty { Name = "ID", Value = (int)42 },
+                            new ODataProperty { Name = "ID", Value = (int)44 },
                             new ODataProperty { Name = "Hobby", Value = null },
                         }
                     },
@@ -487,7 +487,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                     EntitySet = customerSet,
                     Json = string.Join("$(NL)",
                         "{{",
-                        "{0}\"ID\":\"42\"",
+                        "{0}\"ID\":\"44\"",
                         "}}")
                 },
 
