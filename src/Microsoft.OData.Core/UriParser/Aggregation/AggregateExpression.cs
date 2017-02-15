@@ -33,7 +33,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(alias, "alias");
-            ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
+            //ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
 
             this.expression = expression;
             this.method = method;
