@@ -134,7 +134,12 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
 
         private IEdmTypeReference GetTypeReferenceByPropertyName(string name)
         {
-            return aggregateExpressionsCache.First(statement => statement.Alias.Equals(name)).TypeReference;
+            if (aggregateExpressionsCache != null)
+            {
+                return aggregateExpressionsCache.First(statement => statement.Alias.Equals(name))?.TypeReference;
+            }
+
+            return null;
         }
 
         private GroupByTransformationNode BindGroupByToken(GroupByToken token)
