@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <StrongNamePublicKeysPath>D:\Source\ODataAgg\odata.net\tools\StrongNamePublicKeys</StrongNamePublicKeysPath>
-    <CustomStrongNamePublicKeysPath>D:\Source\ODataAgg\odata.net\tools\StrongNamePublicKeys</CustomStrongNamePublicKeysPath>
+    <StrongNamePublicKeysPath>$(BuildToolsetRoot)\StrongNamePublicKeys</StrongNamePublicKeysPath>
+    <CustomStrongNamePublicKeysPath>$(EnlistmentRoot)\tools\StrongNamePublicKeys</CustomStrongNamePublicKeysPath>
     <StrongNameKeyFile Condition="'$(StrongNameKeyFile)' == ''">35MSSharedLib1024.snk</StrongNameKeyFile>
     <TestStrongNameKeyFile Condition="'$(TestStrongNameKeyFile)' == ''">testkey.snk</TestStrongNameKeyFile>
     <SigningType Condition="'$(SigningType)' == ''">None</SigningType>
