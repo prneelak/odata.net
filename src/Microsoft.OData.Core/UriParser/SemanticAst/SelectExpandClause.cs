@@ -68,6 +68,12 @@ namespace Microsoft.OData.UriParser
             }
         }
 
+        /// <summary>
+        /// Gets a flag indicating that auto select was set on an entity type level.
+        /// </summary>
+        /// <remarks>
+        /// In that case SelectedItems will contain a lot of records (all properties for the type), but we should ignore these properties when writing @odata.context
+        /// </remarks>
         public bool AllAutoSelected { get; set; }
 
         /// <summary>
