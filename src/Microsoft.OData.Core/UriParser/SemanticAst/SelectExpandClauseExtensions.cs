@@ -83,7 +83,20 @@ namespace Microsoft.OData.UriParser
         /// <returns>String list generated from selected items</returns>
         internal static List<string> GetCurrentLevelSelectList(this SelectExpandClause selectExpandClause)
         {
-            return selectExpandClause.SelectedItems.Select(GetSelectString).Where(i => i != null).ToList();
+            if (selectExpandClause.AllAutoSelected)
+            {
+                return selectExpandClause.SelectedItems
+                    .OfType<ExpandedNavigationSelectItem>()
+                    .Select(i => String.Join("/", i.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance)))
+                    .ToList();
+            }
+            else
+            {
+                return selectExpandClause.SelectedItems
+                    .Select(GetSelectString)
+                    .Where(i => i != null)
+                    .ToList();
+            }
         }
 
         /// <summary>

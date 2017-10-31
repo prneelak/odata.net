@@ -34,10 +34,11 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="selectedItems">The selected properties and operations. This list should include any expanded navigation properties.</param>
         /// <param name="allSelected">Flag indicating if all items have been selected at this level.</param>
-        public SelectExpandClause(IEnumerable<SelectItem> selectedItems, bool allSelected)
+        public SelectExpandClause(IEnumerable<SelectItem> selectedItems, bool allSelected, bool allAutoSelected = false)
         {
             this.selectedItems = selectedItems != null ? new ReadOnlyCollection<SelectItem>(selectedItems.ToList()) : new ReadOnlyCollection<SelectItem>(new List<SelectItem>());
             this.allSelected = allSelected;
+            this.AllAutoSelected = allAutoSelected;
         }
 
         /// <summary>
@@ -66,6 +67,14 @@ namespace Microsoft.OData.UriParser
                 return this.allSelected.Value;
             }
         }
+
+        /// <summary>
+        /// Gets a flag indicating that auto select was set on an entity type level.
+        /// </summary>
+        /// <remarks>
+        /// In that case SelectedItems will contain a lot of records (all properties for the type), but we should ignore these properties when writing @odata.context
+        /// </remarks>
+        public bool AllAutoSelected { get; set; }
 
         /// <summary>
         /// Add a select item to the current list of selection items
@@ -108,7 +117,7 @@ namespace Microsoft.OData.UriParser
         /// Sets all the value of AllSelected
         /// </summary>
         /// <param name="newValue">the new value to set</param>
-        internal void SetAllSelected(bool newValue)
+        public void SetAllSelected(bool newValue)
         {
             this.allSelected = newValue;
         }
