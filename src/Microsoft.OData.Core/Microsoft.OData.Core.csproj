@@ -66,6 +66,7 @@
     <Compile Include="DuplicatePropertyNameChecker.cs" />
     <Compile Include="PropertyValueTypeInfo.cs" />
     <Compile Include="BindingPathHelper.cs" />
+    <Compile Include="UriParser\Binders\ErrorCodes.cs" />
     <Compile Include="UriParser\ODataPathInfo.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\CountVirtualPropertyNode.cs" />

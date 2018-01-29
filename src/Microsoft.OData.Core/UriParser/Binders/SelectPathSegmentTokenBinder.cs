@@ -59,7 +59,18 @@ namespace Microsoft.OData.UriParser
                 return new DynamicPathSegment(tokenIn.Identifier);
             }
 
-            throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(edmType.FullTypeName(), tokenIn.Identifier));
+
+            var odataError = new ODataError();
+            odataError.ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE;
+            odataError.Target = tokenIn.Identifier;
+            ODataErrorDetail errorProperty = new ODataErrorDetail();
+            errorProperty.Target = tokenIn.Identifier;
+            ODataErrorDetail errorType = new ODataErrorDetail();
+            errorType.Target = edmType.FullTypeName();
+            odataError.Details.Add(errorProperty);
+            odataError.Details.Add(errorType);
+
+            throw new ODataErrorException(odataError); 
         }
 
         /// <summary>
