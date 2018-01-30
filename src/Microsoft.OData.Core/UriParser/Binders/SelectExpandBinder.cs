@@ -194,7 +194,20 @@ namespace Microsoft.OData.UriParser
             IEdmProperty edmProperty = this.configuration.Resolver.ResolveProperty(currentLevelEntityType, firstNonTypeToken.Identifier);
             if (edmProperty == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentLevelEntityType.FullTypeName(), currentToken.Identifier));
+                ODataError odataError = new ODataError
+                {
+                    ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE,
+                    Target = currentToken.Identifier,
+                    Details = new List<ODataErrorDetail>
+                {
+                    new ODataErrorDetail {
+                        ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE,
+                        Target = currentLevelEntityType.FullTypeName()
+                    }
+                }
+                };
+
+                throw new ODataErrorException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentLevelEntityType.FullTypeName(), currentToken.Identifier), odataError);
             }
 
             IEdmNavigationProperty currentNavProp = edmProperty as IEdmNavigationProperty;
@@ -324,7 +337,20 @@ namespace Microsoft.OData.UriParser
             IEdmProperty property = this.configuration.Resolver.ResolveProperty(currentType, currentToken.Identifier);
             if (edmProperty == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentType.FullTypeName(), currentToken.Identifier));
+                ODataError odataError = new ODataError
+                {
+                    ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE,
+                    Target = currentToken.Identifier,
+                    Details = new List<ODataErrorDetail>
+                {
+                    new ODataErrorDetail {
+                        ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE,
+                        Target = edmType.FullTypeName()
+                    }
+                }
+                };
+
+                throw new ODataErrorException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentType.FullTypeName(), currentToken.Identifier), odataError);
             }
 
             IEdmStructuralProperty complexProp = property as IEdmStructuralProperty;

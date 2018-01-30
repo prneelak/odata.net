@@ -7,6 +7,7 @@
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using ODataErrorStrings = Microsoft.OData.Strings;
+using System.Collections.Generic;
 
 namespace Microsoft.OData.UriParser
 {
@@ -118,9 +119,20 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
-                    parentNode.TypeReference.FullName(),
-                    endPathToken.Identifier));
+                ODataError odataError = new ODataError
+                {
+                    ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE,
+                    Target = endPathToken.Identifier,
+                    Details = new List<ODataErrorDetail>
+                    {
+                        new ODataErrorDetail {
+                            ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE,
+                            Target = parentNode.TypeReference.FullName()
+                        }
+                    }
+                };
+
+                throw new ODataErrorException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(parentNode.TypeReference.FullName(), endPathToken.Identifier), odataError);
             }
         }
 
