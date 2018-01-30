@@ -60,16 +60,18 @@ namespace Microsoft.OData.UriParser
             }
 
 
-            var odataError = new ODataError();
-            odataError.ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE;
-            odataError.Target = tokenIn.Identifier;
-            ODataErrorDetail errorProperty = new ODataErrorDetail();
-            errorProperty.Target = tokenIn.Identifier;
-            ODataErrorDetail errorType = new ODataErrorDetail();
-            errorType.Target = edmType.FullTypeName();
-            odataError.Details.Add(errorProperty);
-            odataError.Details.Add(errorType);
-
+            ODataError odataError = new ODataError {
+                ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE,
+                Target = tokenIn.Identifier,
+                Details = new List<ODataErrorDetail>
+                {
+                    new ODataErrorDetail {
+                        ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE,
+                        Target = edmType.FullTypeName()
+                    }
+                }
+            };
+            
             throw new ODataErrorException(odataError); 
         }
 
