@@ -72,7 +72,7 @@ namespace Microsoft.OData.UriParser
                 }
             };
             
-            throw new ODataErrorException(odataError); 
+            throw new ODataErrorException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(edmType.FullTypeName(), tokenIn.Identifier), odataError); 
         }
 
         /// <summary>
