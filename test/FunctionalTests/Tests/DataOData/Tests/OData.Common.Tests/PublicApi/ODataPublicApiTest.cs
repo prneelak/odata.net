@@ -26,9 +26,9 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.PublicApi
             Assert.IsTrue(Directory.Exists(testDirectory), "Test directory does not exists");
             string[] assemlyLists =
             {
-                "Microsoft.Spatial.dll",
-                "Microsoft.OData.Edm.dll",
-                "Microsoft.OData.Core.dll",
+                "Microsoft.TeamFoundation.Spatial.dll",
+                "Microsoft.TeamFoundation.OData.Edm.dll",
+                "Microsoft.TeamFoundation.OData.Core.dll",
                 "Microsoft.OData.Client.dll"
             };
 
