@@ -119,20 +119,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                ODataError odataError = new ODataError
-                {
-                    ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE,
-                    Target = endPathToken.Identifier,
-                    Details = new List<ODataErrorDetail>
-                    {
-                        new ODataErrorDetail {
-                            ErrorCode = ErrorCodes.PROPERTY_NOT_FOUND_IN_TYPE,
-                            Target = parentNode.TypeReference.FullName()
-                        }
-                    }
-                };
-
-                throw new ODataErrorException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(parentNode.TypeReference.FullName(), endPathToken.Identifier), odataError);
+               throw ExceptionUtil.CreatePropertyNotFoundException(endPathToken.Identifier, parentNode.TypeReference.FullName());
             }
         }
 

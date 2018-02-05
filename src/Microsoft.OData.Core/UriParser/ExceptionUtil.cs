@@ -7,6 +7,8 @@
 namespace Microsoft.OData.UriParser
 {
     using Microsoft.OData.Edm;
+    using System.Collections.Generic;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Helper class for throwing exceptions during URI parsing.
@@ -62,5 +64,29 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(Strings.PathParser_TypeMustBeRelatedToSet(type, secondType, segmentName));
             }
         }
+
+        /// <summary>
+        /// Exception for property not being found in the given type.
+        /// </summary>
+        /// <param name="propertyName">The propertyName which was not found in the type.</param>
+        /// <param name="typeName">The typeName of the type in which the property was not found.</param>
+        internal static ODataErrorException CreatePropertyNotFoundException(string propertyName, string typeName)
+        {
+            ODataError odataError = new ODataError
+            {
+                ErrorCode = ErrorCodes.PropertyNotFoundInType,
+                Target = propertyName,
+                Details = new List<ODataErrorDetail>
+                    {
+                        new ODataErrorDetail {
+                            ErrorCode = ErrorCodes.PropertyNotFoundInType,
+                            Target = typeName
+                        }
+                    }
+            };
+
+            return new ODataErrorException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(typeName, propertyName), odataError);
+        }
+
     }
 }
