@@ -6274,10 +6274,13 @@ public sealed class Microsoft.OData.UriParser.SearchTermNode : Microsoft.OData.U
 }
 
 public sealed class Microsoft.OData.UriParser.SelectExpandClause {
-	public SelectExpandClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.SelectItem]] selectedItems, bool allSelected)
+	public SelectExpandClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.SelectItem]] selectedItems, bool allSelected, params bool allAutoSelected)
 
+	bool AllAutoSelected  { public get; public set; }
 	bool AllSelected  { public get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.SelectItem]] SelectedItems  { public get; }
+
+	public void SetAllSelected (bool newValue)
 }
 
 public sealed class Microsoft.OData.UriParser.SelectToken : Microsoft.OData.UriParser.QueryToken {
