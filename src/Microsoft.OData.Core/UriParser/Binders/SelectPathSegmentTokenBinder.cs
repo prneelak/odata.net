@@ -59,7 +59,7 @@ namespace Microsoft.OData.UriParser
                 return new DynamicPathSegment(tokenIn.Identifier);
             }
 
-            throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(edmType.FullTypeName(), tokenIn.Identifier));
+            throw ExceptionUtil.CreatePropertyNotFoundException(tokenIn.Identifier, edmType.FullTypeName());
         }
 
         /// <summary>

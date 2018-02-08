@@ -7,6 +7,7 @@
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using ODataErrorStrings = Microsoft.OData.Strings;
+using System.Collections.Generic;
 
 namespace Microsoft.OData.UriParser
 {
@@ -118,9 +119,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
-                    parentNode.TypeReference.FullName(),
-                    endPathToken.Identifier));
+               throw ExceptionUtil.CreatePropertyNotFoundException(endPathToken.Identifier, parentNode.TypeReference.FullName());
             }
         }
 

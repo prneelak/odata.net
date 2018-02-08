@@ -194,7 +194,7 @@ namespace Microsoft.OData.UriParser
             IEdmProperty edmProperty = this.configuration.Resolver.ResolveProperty(currentLevelEntityType, firstNonTypeToken.Identifier);
             if (edmProperty == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentLevelEntityType.FullTypeName(), currentToken.Identifier));
+                throw ExceptionUtil.CreatePropertyNotFoundException(currentToken.Identifier, currentLevelEntityType.FullTypeName());
             }
 
             IEdmNavigationProperty currentNavProp = edmProperty as IEdmNavigationProperty;
@@ -324,7 +324,7 @@ namespace Microsoft.OData.UriParser
             IEdmProperty property = this.configuration.Resolver.ResolveProperty(currentType, currentToken.Identifier);
             if (edmProperty == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentType.FullTypeName(), currentToken.Identifier));
+                throw ExceptionUtil.CreatePropertyNotFoundException(currentToken.Identifier, edmType.FullTypeName());
             }
 
             IEdmStructuralProperty complexProp = property as IEdmStructuralProperty;

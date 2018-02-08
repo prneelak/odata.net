@@ -156,9 +156,7 @@ namespace Microsoft.OData.UriParser
 
                 if (singleValueParent.TypeReference != null && !singleValueParent.TypeReference.Definition.IsOpenType())
                 {
-                    throw new ODataException(
-                        ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
-                            parent.GetEdmTypeReference().FullName(), segmentToken.Identifier));
+                    throw ExceptionUtil.CreatePropertyNotFoundException(segmentToken.Identifier, parent.GetEdmTypeReference().FullName());
                 }
 
                 return new SingleValueOpenPropertyAccessNode(singleValueParent, segmentToken.Identifier);
