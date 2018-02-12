@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AllowCrossTargeting>true</AllowCrossTargeting>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <AssemblyName>Microsoft.OData.Edm.NetFX35</AssemblyName>
+    <AssemblyName>Microsoft.OData.Edm.NetFX35.V7</AssemblyName>
     <OutputType>Library</OutputType>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <RootNamespace>System</RootNamespace>
@@ -527,6 +527,9 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsOperationParameter.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOperationParameter.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsOptionalParameter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOptionalParameter.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsModel.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsModel.cs</Link>
     </Compile>
@@ -932,6 +935,9 @@
     <Compile Include="..\Schema\EdmOperationParameter.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmOperationParameter.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\EdmOptionalParameter.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmOptionalParameter.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\EdmPathExpression.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmPathExpression.cs</Link>
     </Compile>
@@ -979,6 +985,12 @@
     </Compile>
     <Compile Include="..\Schema\EdmUnknownEntitySet.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmUnknownEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmUntypedStructuredType.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmUntypedStructuredType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmUntypedStructuredTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmUntypedStructuredTypeReference.cs</Link>
     </Compile>
     <Compile Include="..\Schema\EdmUntypedTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmUntypedTypeReference.cs</Link>
@@ -1102,6 +1114,9 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmOperationParameter.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOptionalParameter.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOptionalParameter.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmPathExpression.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPathExpression.cs</Link>
