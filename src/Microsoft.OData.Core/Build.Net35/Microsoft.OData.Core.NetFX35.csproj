@@ -1473,6 +1473,9 @@
     <Compile Include="..\BindingPathHelper.cs">
       <Link>Microsoft\OData\Core\BindingPathHelper.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\Binders\ErrorCodes.cs">
+      <Link>Microsoft\OData\Core\UriParser\Binders\ErrorCodes.cs</Link>
+    </Compile>    
     <Compile Include="..\DuplicatePropertyNameChecker.cs">
       <Link>Microsoft\OData\Core\DuplicatePropertyNameChecker.cs</Link>
     </Compile>
