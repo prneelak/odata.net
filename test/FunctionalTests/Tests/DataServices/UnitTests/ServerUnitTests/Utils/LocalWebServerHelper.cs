@@ -566,9 +566,9 @@ namespace AstoriaUnitTests.Tests
         {
             var binariesToCopy = new string[]
             {
-                "Microsoft.Spatial.dll",
-                "Microsoft.OData.Edm.dll",
-                "Microsoft.OData.Core.dll",
+                "Microsoft.TeamFoundation.Spatial.dll",
+                "Microsoft.TeamFoundation.OData.Edm.dll",
+                "Microsoft.TeamFoundation.OData.Core.dll",
                 "Microsoft.OData.Client.dll",
                 "Microsoft.OData.Service.dll"
             };

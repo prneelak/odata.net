@@ -259,7 +259,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 messageInfo,
                 settings);
 
-            Assembly assembly = Assembly.LoadFrom("Microsoft.OData.Core.dll");
+            Assembly assembly = Assembly.LoadFrom("Microsoft.TeamFoundation.OData.Core.dll");
             object listener = assembly.CreateInstance(
                 "Microsoft.OData.MultipartMixed.ODataMultipartMixedBatchWriter",
                 false, /*ignoreCase*/
@@ -297,7 +297,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 messageInfo,
                 settings);
 
-            Assembly assembly = Assembly.LoadFrom("Microsoft.OData.Core.dll");
+            Assembly assembly = Assembly.LoadFrom("Microsoft.TeamFoundation.OData.Core.dll");
             object listener = assembly.CreateInstance(
                 "Microsoft.OData.JsonLight.ODataJsonLightBatchWriter",
                 false, /*ignoreCase*/
