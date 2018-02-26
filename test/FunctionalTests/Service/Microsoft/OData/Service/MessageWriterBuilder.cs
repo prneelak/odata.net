@@ -196,7 +196,7 @@ namespace Microsoft.OData.Service
         /// <returns>A new settings instance.</returns>
         internal static ODataMessageWriterSettings CreateMessageWriterSettings()
         {
-            var writerSettings = new ODataMessageWriterSettings { EnableCharactersCheck = false };
+            var writerSettings = new ODataMessageWriterSettings { EnableCharactersCheck = false, IgnoreNullValues = false };
             CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);
             return writerSettings;
         }

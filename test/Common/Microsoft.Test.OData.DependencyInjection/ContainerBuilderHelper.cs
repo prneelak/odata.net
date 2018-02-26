@@ -16,6 +16,7 @@ namespace Microsoft.Test.OData.DependencyInjection
             IContainerBuilder builder = new TestContainerBuilder();
 
             builder.AddDefaultODataServices();
+            builder.AddServicePrototype(new ODataMessageWriterSettings() { IgnoreNullValues = false });
 
             if (action != null)
             {

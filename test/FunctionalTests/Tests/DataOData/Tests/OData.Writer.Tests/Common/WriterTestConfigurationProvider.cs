@@ -391,6 +391,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 Version = version,
                 BaseUri = baseUri,
                 EnableMessageStreamDisposal = enableMessageStreamDisposal,
+                IgnoreNullValues = false
             };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test"));
             settings.SetContentType(format);

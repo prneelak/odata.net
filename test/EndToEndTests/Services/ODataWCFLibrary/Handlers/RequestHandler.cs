@@ -278,6 +278,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     SelectAndExpand = this.QueryContext.QuerySelectExpandClause,
                 },
                 Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
+                IgnoreNullValues = false
                 // EnableIndentation = true
             };
 

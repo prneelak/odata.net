@@ -73,6 +73,7 @@ namespace Microsoft.OData
             this.EnableCharactersCheck = false;
             this.Validations = ValidationKinds.All;
             this.Validator = new WriterValidator(this);
+            this.IgnoreNullValues = true;
         }
 
         /// <summary>
