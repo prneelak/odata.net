@@ -1209,7 +1209,10 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             container.AddElement(entitySet);
 
             var message = new ODataResponseMessageSimulator();
-            var settings = new ODataMessageWriterSettings();
+            var settings = new ODataMessageWriterSettings()
+            {
+                IgnoreNullValues = false
+            };
 
             if (noMetadataMode)
             {

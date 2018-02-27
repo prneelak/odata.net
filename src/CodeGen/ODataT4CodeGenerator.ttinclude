@@ -21,9 +21,9 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <#@ Assembly Name="System.Xml.ReaderWriter.dll" #>
 <#@ Assembly Name="System.Windows.Forms.dll" #>
 <#@ Assembly Name="Microsoft.OData.Client.dll" #>
-<#@ Assembly Name="Microsoft.OData.Core.dll" #>
-<#@ Assembly Name="Microsoft.OData.Edm.dll" #>
-<#@ Assembly Name="Microsoft.Spatial.dll" #>
+<#@ Assembly Name="Microsoft.TeamFoundation.OData.Core.dll" #>
+<#@ Assembly Name="Microsoft.TeamFoundation.OData.Edm.dll" #>
+<#@ Assembly Name="Microsoft.TeamFoundation.Spatial.dll" #>
 <#@ Import Namespace="System" #>
 <#@ Import Namespace="System.IO" #>
 <#@ Import Namespace="System.Diagnostics" #>

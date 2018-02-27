@@ -38,9 +38,9 @@ internal static class DataFxAssemblyRef
         internal const string DataServices = "Microsoft.OData.Service";
         internal const string DataServicesClient = "Microsoft.OData.Client";
         internal const string DataSvcUtil = "DataSvcUtil";
-        internal const string OData = "Microsoft.OData.Core";
-        internal const string Spatial = "Microsoft.Spatial";
-        internal const string EntityDataModel = "Microsoft.OData.Edm";
+        internal const string OData = "Microsoft.TeamFoundation.OData.Core";
+        internal const string Spatial = "Microsoft.TeamFoudnation.Spatial";
+        internal const string EntityDataModel = "Microsoft.TeamFoundation.OData.Edm";
     }
 
     /// <summary>Current assembly file names</summary>
@@ -128,7 +128,7 @@ internal static class DataFxAssemblyRef
         /// <summary>where to find silverlight reference assemblies</summary>
         internal const string DS_SilverlightReferenceAssemblyPath = @"%ProgramFiles%\Microsoft WCF Data Services\" + DS_BaseVersion + @"\bin\Silverlight";
 
-        internal const string EntityDataModel = "Microsoft.OData.Edm.dll";
+        internal const string EntityDataModel = "Microsoft.TeamFoundation.OData.Edm.dll";
         internal const string DataEntity = "System.Data.Entity.dll";
         internal const string EntityFramework = "EntityFramework.dll";
         internal const string DataEntityDesign = "System.Data.Entity.Design.dll";
@@ -137,8 +137,8 @@ internal static class DataFxAssemblyRef
         internal const string DataServicesClient = "Microsoft.OData.Client.dll";
         internal const string DataServicesSilverlightClient = "Microsoft.OData.Client.SL.dll";
         internal const string DataSvcUtil = "DataSvcUtil.exe";
-        internal const string ODataLib = "Microsoft.OData.Core.dll";
-        internal const string SpatialCore = "Microsoft.Spatial.dll";
+        internal const string ODataLib = "Microsoft.TeamFoundation.OData.Core.dll";
+        internal const string SpatialCore = "Microsoft.TeamFoundation.Spatial.dll";
 
         internal const string System = "System.dll";
         internal const string SystemCore = "System.Core.dll";

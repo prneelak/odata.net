@@ -73,6 +73,7 @@ namespace Microsoft.OData
             this.EnableCharactersCheck = false;
             this.Validations = ValidationKinds.All;
             this.Validator = new WriterValidator(this);
+            this.IgnoreNullValues = true;
         }
 
         /// <summary>
@@ -176,6 +177,14 @@ namespace Microsoft.OData
         /// Returns whether ThrowOnDuplicatePropertyNames validation setting is enabled.
         /// </summary>
         internal bool ThrowOnDuplicatePropertyNames { get; private set; }
+
+        /// <summary>
+        /// Don't serialize null values
+        /// </summary>
+        /// <remarks>
+        /// Default valus is false, that means serialize null values.
+        /// </remarks>
+        public bool IgnoreNullValues { get; set; }
 
         /// <summary>
         /// Returns whether ThrowOnUndeclaredPropertyForNonOpenType validation setting is enabled.
@@ -398,6 +407,7 @@ namespace Microsoft.OData
             this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
             this.useFormat = other.useFormat;
             this.Version = other.Version;
+            this.IgnoreNullValues = other.IgnoreNullValues;
 
             this.validations = other.validations;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;

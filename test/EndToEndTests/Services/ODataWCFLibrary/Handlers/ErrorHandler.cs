@@ -30,7 +30,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings
             {
-                BaseUri = this.ServiceRootUri
+                BaseUri = this.ServiceRootUri,
+                IgnoreNullValues = false
             };
             settings.SetContentType(ODataFormat.Json);
             return settings;

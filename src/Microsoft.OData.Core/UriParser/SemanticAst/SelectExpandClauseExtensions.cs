@@ -87,7 +87,7 @@ namespace Microsoft.OData.UriParser
             {
                 return selectExpandClause.SelectedItems
                     .OfType<ExpandedNavigationSelectItem>()
-                    .Select(i => String.Join("/", i.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance)))
+                    .Select(i => String.Join("/", i.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray()))
                     .ToList();
             }
             else

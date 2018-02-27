@@ -1024,7 +1024,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, ODataMediaType mediaType, bool writingResponse = true, IEdmModel userModel = null, Uri serviceDocumentUri = null)
         {
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, IgnoreNullValues = false };
             if (serviceDocumentUri != null)
             {
                 settings.SetServiceDocumentUri(serviceDocumentUri);

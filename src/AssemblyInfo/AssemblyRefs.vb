@@ -47,8 +47,8 @@ Friend Class DataFxAssemblyRef
 
         Friend Shared DataServices As String = "Microsoft.OData.Service.dll"
         Friend Shared DataServicesClient As String = "Microsoft.OData.Client.dll"
-        Friend Shared ODataLib As String = "Microsoft.OData.Core.dll"
-        Friend Shared EdmLib As String = "Microsoft.OData.Edm.dll"
+        Friend Shared ODataLib As String = "Microsoft.TeamFoundation.OData.Core.dll"
+        Friend Shared EdmLib As String = "Microsoft.TeamFoundation.OData.Edm.dll"
 
         Friend Shared DataServicesSilverlightClient As String = "Microsoft.OData.Client.SL.dll"
 
