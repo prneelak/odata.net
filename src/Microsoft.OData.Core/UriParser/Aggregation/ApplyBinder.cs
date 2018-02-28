@@ -55,6 +55,9 @@ namespace Microsoft.OData.UriParser.Aggregation
                         var computeClause = this.computeBinder.BindCompute((ComputeToken)token);
                         var computeNode = new ComputeTransformationNode(computeClause);
                         transformations.Add(computeNode);
+                        state.AggregatedPropertyNames =
+                                computeNode.ComputeClause.ComputedItems.Select(statement => statement.Alias).ToList();
+
                         break;
                     default:
                         var filterClause = this.filterBinder.BindFilter(token);
