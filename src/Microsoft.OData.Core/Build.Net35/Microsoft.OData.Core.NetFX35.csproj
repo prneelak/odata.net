@@ -1491,6 +1491,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\FilterTransformationNode.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\FilterTransformationNode.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\ComputeTransformationNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\Aggregation\ComputeTransformationNode.cs</Link>
+    </Compile>    
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\TransformationNode.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\TransformationNode.cs</Link>
     </Compile>
