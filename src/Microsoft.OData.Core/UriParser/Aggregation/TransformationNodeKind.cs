@@ -25,5 +25,10 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// A filter clause
         /// </summary>
         Filter = 2,
+
+        /// <summary>
+        /// A compute clause
+        /// </summary>
+        Compute = 3,
     }
 }

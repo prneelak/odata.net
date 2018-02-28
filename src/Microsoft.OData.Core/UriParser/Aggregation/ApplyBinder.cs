@@ -19,6 +19,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         private BindingState state;
 
         private FilterBinder filterBinder;
+        private ComputeBinder computeBinder;
 
         private IEnumerable<AggregateExpression> aggregateExpressionsCache;
 
@@ -27,6 +28,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             this.bindMethod = bindMethod;
             this.state = state;
             this.filterBinder = new FilterBinder(bindMethod, state);
+            this.computeBinder = new ComputeBinder(bindMethod);
         }
 
         public ApplyClause BindApply(IEnumerable<QueryToken> tokens)
@@ -48,6 +50,11 @@ namespace Microsoft.OData.UriParser.Aggregation
                     case QueryTokenKind.AggregateGroupBy:
                         var groupBy = BindGroupByToken((GroupByToken)(token));
                         transformations.Add(groupBy);
+                        break;
+                    case QueryTokenKind.Compute:
+                        var computeClause = this.computeBinder.BindCompute((ComputeToken)token);
+                        var computeNode = new ComputeTransformationNode(computeClause);
+                        transformations.Add(computeNode);
                         break;
                     default:
                         var filterClause = this.filterBinder.BindFilter(token);

@@ -30,7 +30,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// List of supported $apply keywords
         /// </summary>
-        private static readonly string supportedKeywords = string.Join("|", new string[] { ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy });
+        private static readonly string supportedKeywords = string.Join("|", new string[] { ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy, ExpressionConstants.KeywordCompute });
 
         /// <summary>
         /// Set of parsed parameters
@@ -261,6 +261,9 @@ namespace Microsoft.OData.UriParser
                     case ExpressionConstants.KeywordFilter:
                         transformationTokens.Add(ParseApplyFilter());
                         break;
+                    case ExpressionConstants.KeywordCompute:
+                        transformationTokens.Add(ParseApplyCompute());
+                        break;
                     case ExpressionConstants.KeywordGroupBy:
                         transformationTokens.Add(ParseGroupBy());
                         break;
@@ -435,6 +438,49 @@ namespace Microsoft.OData.UriParser
             // '(' expression ')'
             return this.ParseParenExpression();
         }
+
+        // parses $apply compute tranformation (.e.g. compute(Price mul Qty as Total))
+        internal QueryToken ParseApplyCompute()
+        {
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordCompute), "token identifier is compute");
+            lexer.NextToken();
+
+            // '('
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            // series of statements separates by commas
+            List<ComputeExpressionToken> transformationTokens = new List<ComputeExpressionToken>();
+
+            while (true)
+            {
+                ComputeExpressionToken computed = this.ParseComputeExpression();
+                transformationTokens.Add(computed);
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                {
+                    break;
+                }
+
+                this.lexer.NextToken();
+            }
+
+            // ")"
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+
+            //// '(' expression ')'
+            return new ComputeToken(transformationTokens);
+        }
+
 
         /// <summary>
         /// Parse compute expression text into a token.
