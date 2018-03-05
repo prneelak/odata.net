@@ -41,27 +41,24 @@ namespace Microsoft.OData.UriParser.Aggregation
                 switch (token.Kind)
                 {
                     case QueryTokenKind.Aggregate:
-                        var aggregate = BindAggregateToken((AggregateToken)(token));
+                        AggregateTransformationNode aggregate = BindAggregateToken((AggregateToken)(token));
                         transformations.Add(aggregate);
                         aggregateExpressionsCache = aggregate.Expressions;
-                        state.AggregatedPropertyNames =
-                            aggregate.Expressions.Select(statement => statement.Alias).ToList();
+                        state.AggregatedPropertyNames = aggregate.Expressions.Select(statement => statement.Alias).ToList();
                         break;
                     case QueryTokenKind.AggregateGroupBy:
-                        var groupBy = BindGroupByToken((GroupByToken)(token));
+                        GroupByTransformationNode groupBy = BindGroupByToken((GroupByToken)(token));
                         transformations.Add(groupBy);
                         break;
                     case QueryTokenKind.Compute:
-                        var computeClause = this.computeBinder.BindCompute((ComputeToken)token);
-                        var computeNode = new ComputeTransformationNode(computeClause);
+                        ComputeClause computeClause = this.computeBinder.BindCompute((ComputeToken)token);
+                        ComputeTransformationNode computeNode = new ComputeTransformationNode(computeClause);
                         transformations.Add(computeNode);
-                        state.AggregatedPropertyNames =
-                                computeNode.ComputeClause.ComputedItems.Select(statement => statement.Alias).ToList();
-
+                        state.AggregatedPropertyNames = computeNode.ComputeClause.ComputedItems.Select(statement => statement.Alias).ToList();
                         break;
                     default:
-                        var filterClause = this.filterBinder.BindFilter(token);
-                        var filterNode = new FilterTransformationNode(filterClause);
+                        FilterClause filterClause = this.filterBinder.BindFilter(token);
+                        FilterTransformationNode filterNode = new FilterTransformationNode(filterClause);
                         transformations.Add(filterNode);
                         break;
                 }
