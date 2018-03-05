@@ -1013,6 +1013,9 @@
     <Compile Include="..\UriParser\Aggregation\FilterTransformationNode.cs">
       <Link>UriParser\Aggregation\FilterTransformationNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\Aggregation\ComputeTransformationNode.cs">
+      <Link>UriParser\Aggregation\ComputeTransformationNode.cs</Link>
+    </Compile>    
     <Compile Include="..\UriParser\Aggregation\GroupByPropertyNode.cs">
       <Link>UriParser\Aggregation\GroupByPropertyNode.cs</Link>
     </Compile>

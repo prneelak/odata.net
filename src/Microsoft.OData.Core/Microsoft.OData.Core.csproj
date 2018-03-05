@@ -80,6 +80,7 @@
     <Compile Include="DuplicatePropertyNameChecker.cs" />
     <Compile Include="PropertyValueTypeInfo.cs" />
     <Compile Include="BindingPathHelper.cs" />
+    <Compile Include="UriParser\Aggregation\ComputeTransformationNode.cs" />
     <Compile Include="UriParser\Binders\ComputeBinder.cs" />
     <Compile Include="UriParser\Binders\ErrorCodes.cs" />
     <Compile Include="UriParser\ODataPathInfo.cs" />
