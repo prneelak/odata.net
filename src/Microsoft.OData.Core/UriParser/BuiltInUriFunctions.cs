@@ -109,6 +109,7 @@ namespace Microsoft.OData.UriParser
             CreateSpatialFunctions(functions);
             CreateDateTimeFunctions(functions);
             CreateMathFunctions(functions);
+            CreateLogicFunctions(functions);
             return functions;
         }
 
@@ -534,6 +535,35 @@ namespace Microsoft.OData.UriParser
                 EdmCoreModel.Instance.GetDecimal(true));
 
             return new FunctionSignatureWithReturnType[] { doubleSignature, decimalSignature, nullableDoubleSignature, nullableDecimalSignature };
+        }
+
+        private static void CreateLogicFunctions(IDictionary<string, FunctionSignatureWithReturnType[]> functions)
+        {
+            functions.Add("iif", CreateLogicFunctionSignatureArray());
+        }
+
+        private static FunctionSignatureWithReturnType[] CreateLogicFunctionSignatureArray()
+        {
+            var primitiveTypeKinds = Enum.GetValues(typeof(EdmPrimitiveTypeKind)).Cast<EdmPrimitiveTypeKind>().Where(k => k != EdmPrimitiveTypeKind.None && k != EdmPrimitiveTypeKind.Stream);
+            var result = new List<FunctionSignatureWithReturnType>();
+            foreach (var kind in primitiveTypeKinds)
+            {
+                var argumentType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(kind), false);
+                result.Add(new FunctionSignatureWithReturnType(
+                    argumentType,
+                    EdmCoreModel.Instance.GetBoolean(false),
+                    argumentType,
+                    argumentType));
+                argumentType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(kind), true);
+                result.Add(new FunctionSignatureWithReturnType(
+                    argumentType,
+                    EdmCoreModel.Instance.GetBoolean(false),
+                    argumentType,
+                    argumentType));
+
+            }
+
+            return result.ToArray();
         }
     }
 }
