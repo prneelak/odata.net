@@ -548,13 +548,13 @@ namespace Microsoft.OData.UriParser
             var result = new List<FunctionSignatureWithReturnType>();
             foreach (var kind in primitiveTypeKinds)
             {
-                var argumentType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(kind), false);
+                var argumentType = GetPrimitiveTypeReference(kind, false);
                 result.Add(new FunctionSignatureWithReturnType(
                     argumentType,
                     EdmCoreModel.Instance.GetBoolean(false),
                     argumentType,
                     argumentType));
-                argumentType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(kind), true);
+                argumentType = GetPrimitiveTypeReference(kind, true);
                 result.Add(new FunctionSignatureWithReturnType(
                     argumentType,
                     EdmCoreModel.Instance.GetBoolean(false),
@@ -564,6 +564,13 @@ namespace Microsoft.OData.UriParser
             }
 
             return result.ToArray();
+        }
+
+        private static IEdmTypeReference GetPrimitiveTypeReference(EdmPrimitiveTypeKind kind, bool isNullable)
+        {
+            return kind == EdmPrimitiveTypeKind.Decimal
+                                ? (IEdmTypeReference)EdmCoreModel.Instance.GetDecimal(isNullable) // Decimal is special case
+                                : new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(kind), isNullable);
         }
     }
 }
