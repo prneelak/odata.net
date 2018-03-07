@@ -544,23 +544,18 @@ namespace Microsoft.OData.UriParser
 
         private static FunctionSignatureWithReturnType[] CreateLogicFunctionSignatureArray()
         {
-            var primitiveTypeKinds = Enum.GetValues(typeof(EdmPrimitiveTypeKind)).Cast<EdmPrimitiveTypeKind>().Where(k => k != EdmPrimitiveTypeKind.None && k != EdmPrimitiveTypeKind.Stream);
-            var result = new List<FunctionSignatureWithReturnType>();
-            foreach (var kind in primitiveTypeKinds)
+            IEnumerable<EdmPrimitiveTypeKind> primitiveTypeKinds = Enum.GetValues(typeof(EdmPrimitiveTypeKind)).Cast<EdmPrimitiveTypeKind>()
+                .Where(k => k != EdmPrimitiveTypeKind.None && k != EdmPrimitiveTypeKind.Stream);
+            List<FunctionSignatureWithReturnType> result = new List<FunctionSignatureWithReturnType>();
+            foreach (EdmPrimitiveTypeKind kind in primitiveTypeKinds)
             {
-                var argumentType = GetPrimitiveTypeReference(kind, false);
-                result.Add(new FunctionSignatureWithReturnType(
-                    argumentType,
-                    EdmCoreModel.Instance.GetBoolean(false),
-                    argumentType,
-                    argumentType));
-                argumentType = GetPrimitiveTypeReference(kind, true);
-                result.Add(new FunctionSignatureWithReturnType(
-                    argumentType,
-                    EdmCoreModel.Instance.GetBoolean(false),
-                    argumentType,
-                    argumentType));
-
+                IEdmTypeReference argumentType = GetPrimitiveTypeReference(kind, false);
+                IEdmTypeReference nullableArgumentType = GetPrimitiveTypeReference(kind, true);
+                IEdmPrimitiveTypeReference boolType = EdmCoreModel.Instance.GetBoolean(false);
+                result.Add(new FunctionSignatureWithReturnType(argumentType,boolType,argumentType,argumentType));
+                result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, boolType, argumentType, nullableArgumentType));
+                result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, boolType, nullableArgumentType, argumentType));
+                result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, boolType, nullableArgumentType, nullableArgumentType));
             }
 
             return result.ToArray();
