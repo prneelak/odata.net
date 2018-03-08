@@ -109,6 +109,7 @@ namespace Microsoft.OData.UriParser
             CreateSpatialFunctions(functions);
             CreateDateTimeFunctions(functions);
             CreateMathFunctions(functions);
+            CreateLogicFunctions(functions);
             return functions;
         }
 
@@ -534,6 +535,37 @@ namespace Microsoft.OData.UriParser
                 EdmCoreModel.Instance.GetDecimal(true));
 
             return new FunctionSignatureWithReturnType[] { doubleSignature, decimalSignature, nullableDoubleSignature, nullableDecimalSignature };
+        }
+
+        private static void CreateLogicFunctions(IDictionary<string, FunctionSignatureWithReturnType[]> functions)
+        {
+            functions.Add("iif", CreateLogicFunctionSignatureArray());
+        }
+
+        private static FunctionSignatureWithReturnType[] CreateLogicFunctionSignatureArray()
+        {
+            IEnumerable<EdmPrimitiveTypeKind> primitiveTypeKinds = Enum.GetValues(typeof(EdmPrimitiveTypeKind)).Cast<EdmPrimitiveTypeKind>()
+                .Where(k => k != EdmPrimitiveTypeKind.None && k != EdmPrimitiveTypeKind.Stream);
+            List<FunctionSignatureWithReturnType> result = new List<FunctionSignatureWithReturnType>();
+            foreach (EdmPrimitiveTypeKind kind in primitiveTypeKinds)
+            {
+                IEdmTypeReference argumentType = GetPrimitiveTypeReference(kind, false);
+                IEdmTypeReference nullableArgumentType = GetPrimitiveTypeReference(kind, true);
+                IEdmPrimitiveTypeReference boolType = EdmCoreModel.Instance.GetBoolean(false);
+                result.Add(new FunctionSignatureWithReturnType(argumentType,boolType,argumentType,argumentType));
+                result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, boolType, argumentType, nullableArgumentType));
+                result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, boolType, nullableArgumentType, argumentType));
+                result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, boolType, nullableArgumentType, nullableArgumentType));
+            }
+
+            return result.ToArray();
+        }
+
+        private static IEdmTypeReference GetPrimitiveTypeReference(EdmPrimitiveTypeKind kind, bool isNullable)
+        {
+            return kind == EdmPrimitiveTypeKind.Decimal
+                                ? (IEdmTypeReference)EdmCoreModel.Instance.GetDecimal(isNullable) // Decimal is special case
+                                : new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(kind), isNullable);
         }
     }
 }
