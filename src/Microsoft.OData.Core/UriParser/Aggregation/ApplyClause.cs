@@ -21,7 +21,7 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         private readonly IEnumerable<GroupByPropertyNode> lastGroupByPropertyNodes;
 
-        private readonly IEnumerable<ComputeExpression> lastComputeExpressions;
+        private readonly List<ComputeExpression> lastComputeExpressions;
 
         /// <summary>
         /// Create a ApplyClause.
@@ -55,10 +55,8 @@ namespace Microsoft.OData.UriParser.Aggregation
                 }
                 else if (transformations[i].Kind == TransformationNodeKind.Compute)
                 {
-                    if (lastAggregateExpressions == null)
-                    {
-                        lastComputeExpressions = (transformations[i] as ComputeTransformationNode).ComputeClause.ComputedItems;
-                    }
+                    lastComputeExpressions = lastComputeExpressions ?? new List<ComputeExpression>();
+                    lastComputeExpressions.AddRange((transformations[i] as ComputeTransformationNode).ComputeClause.ComputedItems);
                 }
             }
         }

@@ -1197,6 +1197,25 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void MultipleComputePropertiesTreatedAsOpenPropertyInOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "DoubleTotal1 asc, DoubleTotal2 desc"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total)/compute(Total mul 2 as DoubleTotal1)/compute(DoubleTotal1 mul 2 as DoubleTotal2)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal1");
+            orderByClause = orderByClause.ThenBy;
+            orderByClause.Direction.Should().Be(OrderByDirection.Descending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal2");
+        }
+
+        [Fact]
         public void ReferenceComputeAliasCreatedBeforeAggrageteThrows()
         {
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
