@@ -1143,6 +1143,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ComputedPropertyTreatedAsOpenPropertyInOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "DoubleTotal asc"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total)/compute(Total mul 2 as DoubleTotal)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal");
+        }
+
+        [Fact]
         public void AggregatedPropertiesTreatedAsOpenPropertyInOrderBy()
         {
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
@@ -1159,6 +1175,39 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             orderByClause = orderByClause.ThenBy;
             orderByClause.Direction.Should().Be(OrderByDirection.Descending);
             orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Max");
+        }
+
+        [Fact]
+        public void AggregatedAndComputePropertiesTreatedAsOpenPropertyInOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "DoubleTotal asc, Total desc"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total)/compute(Total mul 2 as DoubleTotal)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal");
+            orderByClause = orderByClause.ThenBy;
+            orderByClause.Direction.Should().Be(OrderByDirection.Descending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+        }
+
+        [Fact]
+        public void ReferenceComputeAliasCreatedBeforeAggrageteThrows()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+            HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+            new Dictionary<string, string>()
+            {
+                            {"$orderby", "DoubleFavorite asc"},
+                            {"$apply", "compute(FavoriteNumber mul 2 as DoubleFavorite)/aggregate(DoubleFavorite with sum as Total)"}
+            });
+            Action parseAction = () => { odataQueryOptionParser.ParseApply(); odataQueryOptionParser.ParseOrderBy(); };
+            parseAction.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "DoubleFavorite"));
         }
 
         [Fact]
