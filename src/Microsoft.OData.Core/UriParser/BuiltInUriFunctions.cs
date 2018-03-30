@@ -552,10 +552,18 @@ namespace Microsoft.OData.UriParser
                 IEdmTypeReference argumentType = GetPrimitiveTypeReference(kind, false);
                 IEdmTypeReference nullableArgumentType = GetPrimitiveTypeReference(kind, true);
                 IEdmPrimitiveTypeReference boolType = EdmCoreModel.Instance.GetBoolean(false);
+                IEdmPrimitiveTypeReference nullableBoolType = EdmCoreModel.Instance.GetBoolean(true);
+
                 result.Add(new FunctionSignatureWithReturnType(argumentType,boolType,argumentType,argumentType));
                 result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, boolType, argumentType, nullableArgumentType));
                 result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, boolType, nullableArgumentType, argumentType));
                 result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, boolType, nullableArgumentType, nullableArgumentType));
+
+                result.Add(new FunctionSignatureWithReturnType(argumentType, nullableBoolType, argumentType, argumentType));
+                result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, nullableBoolType, argumentType, nullableArgumentType));
+                result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, nullableBoolType, nullableArgumentType, argumentType));
+                result.Add(new FunctionSignatureWithReturnType(nullableArgumentType, nullableBoolType, nullableArgumentType, nullableArgumentType));
+
             }
 
             return result.ToArray();
