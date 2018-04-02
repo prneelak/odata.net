@@ -45,6 +45,49 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             result.As<SingleValueFunctionCallNode>().TypeReference.Definition.ToString().Should().Contain("String");
         }
 
+        [Theory]
+        [InlineData(null, 1, 1, 1)]
+        [InlineData(1, null, 1, 1)]
+        [InlineData(1, 1, null, 1)]
+        [InlineData(1, 1, 1, null)]
+        [InlineData(1, 1, 1, 2)]
+        [InlineData(1.0, 1, 1, 2)]
+        public void BindIifFunction(object left, object right, object whenTrue, object whenFalse)
+        {
+            var arguments = new List<QueryToken>()
+            {
+                new BinaryOperatorToken(BinaryOperatorKind.GreaterThan, new LiteralToken(left), new LiteralToken(right)),
+                new LiteralToken(whenTrue),
+                new LiteralToken(whenFalse)
+            };
+            var token = new FunctionCallToken("iif", arguments);
+            var result = functionCallBinder.BindFunctionCall(token);
+            result.ShouldBeSingleValueFunctionCallQueryNode("iif");
+            result.As<SingleValueFunctionCallNode>().Parameters.Count().Should().Be(3);
+        }
+
+
+        [Fact]
+        public void BindIifFunctionForOpenType()
+        {
+            BindingState state = new BindingState(this.configuration);
+            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetOpenEmployeeType().GetTypeReference(), HardCodedTestModel.GetPeopleSet());
+            state.RangeVariables.Push(state.ImplicitRangeVariable);
+            binder = new MetadataBinder(state);
+            this.functionCallBinder = new FunctionCallBinder(binder.Bind, state);
+
+            var arguments = new List<QueryToken>()
+            {
+                new BinaryOperatorToken(BinaryOperatorKind.GreaterThan, new LiteralToken(null), new EndPathToken(OpenPropertyName, null)),
+                new LiteralToken(1),
+                new LiteralToken(1)
+            };
+            var token = new FunctionCallToken("iif", arguments);
+            var result = functionCallBinder.BindFunctionCall(token);
+            result.ShouldBeSingleValueFunctionCallQueryNode("iif");
+            result.As<SingleValueFunctionCallNode>().Parameters.Count().Should().Be(3);
+        }
+
         [Fact]
         public void BindFunctionForNullArgumentType()
         {
@@ -294,7 +337,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "IndexOf",
-                new SingleValueNode[] { 
+                new SingleValueNode[] {
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference())),
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[1].GetEdmTypeReference()))},
                 signatures);
@@ -334,7 +377,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "year",
-                new SingleValueNode[] { 
+                new SingleValueNode[] {
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference()))},
                 new FunctionSignatureWithReturnType[0]);
 
@@ -354,7 +397,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "year",
-                new SingleValueNode[] { 
+                new SingleValueNode[] {
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference()))},
                 this.GetHardCodedYearFunctionSignatureForTest());
 
@@ -368,8 +411,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             var result = FunctionCallBinder.MatchSignatureToUriFunction(
                 "substring",
-                 new SingleValueNode[] { 
-                     new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", EdmCoreModel.Instance.GetString(true))), 
+                 new SingleValueNode[] {
+                     new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", EdmCoreModel.Instance.GetString(true))),
                      new SingleValueOpenPropertyAccessNode(new ConstantNode(null)/*parent*/, "myOpenPropertyname")}, // open property's TypeReference is null
                  FunctionCallBinder.GetUriFunctionSignatures("substring"));
 
@@ -385,7 +428,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             QueryToken[] args = new QueryToken[]
             {
                 new LiteralToken("stuff"),
-                new LiteralToken("Edm.String"),   
+                new LiteralToken("Edm.String"),
             };
             FunctionCallToken functionToken = new FunctionCallToken("cast", args);
             QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
@@ -430,7 +473,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryToken[] args = new QueryToken[]
             {
-                new LiteralToken("stuff"), 
+                new LiteralToken("stuff"),
             };
             FunctionCallToken function = new FunctionCallToken("cast", args);
             Action createWithoutATypeArg = () => this.functionCallBinder.BindFunctionCall(function);
@@ -442,7 +485,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryToken[] args = new QueryToken[]
             {
-                new LiteralToken("Collection(Fully.Qualified.Namespace.Person)"),  
+                new LiteralToken("Collection(Fully.Qualified.Namespace.Person)"),
             };
 
             Action bind = () => this.functionCallBinder.BindFunctionCall(new FunctionCallToken("cast", args));
@@ -454,8 +497,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryToken[] args = new QueryToken[]
             {
-                new EndPathToken("GeographyCollection", null), 
-                new LiteralToken("Edm.Geography"),  
+                new EndPathToken("GeographyCollection", null),
+                new LiteralToken("Edm.Geography"),
             };
 
             Action bind = () => this.functionCallBinder.BindFunctionCall(new FunctionCallToken("cast", args));
@@ -467,7 +510,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryToken[] args = new QueryToken[]
             {
-                new LiteralToken("Collection(Fully.Qualified.Namespace.Person)"),  
+                new LiteralToken("Collection(Fully.Qualified.Namespace.Person)"),
             };
 
             Action bind = () => this.functionCallBinder.BindFunctionCall(new FunctionCallToken("isof", args));
@@ -479,8 +522,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryToken[] args = new QueryToken[]
             {
-                new EndPathToken("GeographyCollection", null), 
-                new LiteralToken("Edm.Geography"),  
+                new EndPathToken("GeographyCollection", null),
+                new LiteralToken("Edm.Geography"),
             };
 
             Action bind = () => this.functionCallBinder.BindFunctionCall(new FunctionCallToken("isof", args));
@@ -492,7 +535,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryToken[] args = new QueryToken[]
             {
-                new LiteralToken("Edm.String"), 
+                new LiteralToken("Edm.String"),
                 new LiteralToken("stuff")
             };
             FunctionCallToken function = new FunctionCallToken("cast", args);
@@ -522,7 +565,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             QueryToken[] args = new QueryToken[]
             {
                 new LiteralToken("stuff"),
-                new LiteralToken("Edm.String"),  
+                new LiteralToken("Edm.String"),
             };
             FunctionCallToken functionToken = new FunctionCallToken("isof", args);
             QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
@@ -536,7 +579,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryToken[] args = new QueryToken[]
             {
-                new LiteralToken("Edm.String"),  
+                new LiteralToken("Edm.String"),
             };
             FunctionCallToken functionToken = new FunctionCallToken("isof", args);
             QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
@@ -552,7 +595,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             {
                 new LiteralToken("stuff"),
                 new LiteralToken("more stuff"),
-                new LiteralToken("Edm.String"),  
+                new LiteralToken("Edm.String"),
             };
 
             FunctionCallToken functionWithMoreThanTwoArgs = new FunctionCallToken("isof", moreThanTwoArgs);
@@ -567,7 +610,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryToken[] args = new QueryToken[]
             {
-                new LiteralToken("stuff"), 
+                new LiteralToken("stuff"),
             };
             FunctionCallToken function = new FunctionCallToken("cast", args);
             Action createWithoutATypeArg = () => this.functionCallBinder.BindFunctionCall(function);
@@ -579,7 +622,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryToken[] args = new QueryToken[]
             {
-                new LiteralToken("Edm.String"), 
+                new LiteralToken("Edm.String"),
                 new LiteralToken("stuff")
             };
             FunctionCallToken function = new FunctionCallToken("IsOf", args);
@@ -594,7 +637,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             QueryToken[] args = new QueryToken[]
             {
                 new EndPathToken("GeometryLineString", parent),
-                new LiteralToken("bob"), 
+                new LiteralToken("bob"),
             };
             FunctionCallToken function = new FunctionCallToken("geo.length", args);
             Action createWithMoreThanOneArg = () => this.functionCallBinder.BindFunctionCall(function);
@@ -610,7 +653,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryToken[] args = new QueryToken[]
             {
-                new CustomQueryOptionToken("stuff", "stuff") 
+                new CustomQueryOptionToken("stuff", "stuff")
             };
 
             FunctionCallToken function = new FunctionCallToken("geo.length", args);
@@ -625,7 +668,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             QueryToken[] args = new QueryToken[]
             {
                 new EndPathToken("GeometryLinePolygon", parent),
-                new LiteralToken("bob"), 
+                new LiteralToken("bob"),
             };
             FunctionCallToken function = new FunctionCallToken("geo.length", args);
             Action createWithNonLineStringType = () => this.functionCallBinder.BindFunctionCall(function);
@@ -653,7 +696,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             QueryToken parent = new RangeVariableToken(ExpressionConstants.It);
             QueryToken[] oneArg = new QueryToken[]
             {
-                new EndPathToken("GeometryLineString", parent), 
+                new EndPathToken("GeometryLineString", parent),
             };
 
             QueryToken[] moreThanTwoArgs = new QueryToken[]
@@ -693,7 +736,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             QueryToken[] geometryPointGeometryPoly = new QueryToken[]
             {
                 new EndPathToken("GeometryPoint", parent),
-                new EndPathToken("GeometryPolygon", parent) 
+                new EndPathToken("GeometryPolygon", parent)
             };
 
             QueryToken[] geometryPolyGeometryPoint = new QueryToken[]
@@ -705,7 +748,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             QueryToken[] geographyPointGeographyPoly = new QueryToken[]
             {
                 new EndPathToken("GeographyPoint", parent),
-                new EndPathToken("GeographyPolygon", parent) 
+                new EndPathToken("GeographyPolygon", parent)
             };
 
             QueryToken[] geographyPolyGeographyPoint = new QueryToken[]
@@ -745,31 +788,31 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             QueryToken[] geometryPointNonGeometryPoly = new QueryToken[]
             {
                 new EndPathToken("GeometryPoint", parent),
-                new LiteralToken("bob") 
+                new LiteralToken("bob")
             };
 
             QueryToken[] geometryPolyNonGeometryPoint = new QueryToken[]
             {
                 new EndPathToken("GeometryPolygon", parent),
-                new LiteralToken("bob") 
+                new LiteralToken("bob")
             };
 
             QueryToken[] geographyPointNonGeograpyPoly = new QueryToken[]
             {
                 new EndPathToken("GeographyPoint", parent),
-                new LiteralToken("bob") 
+                new LiteralToken("bob")
             };
 
             QueryToken[] geographyPolyNonGeographyPoint = new QueryToken[]
             {
                 new EndPathToken("GeographyPolygon", parent),
-                new LiteralToken("bob") 
+                new LiteralToken("bob")
             };
 
             QueryToken[] garbage = new QueryToken[]
             {
                 new LiteralToken("tex"),
-                new LiteralToken("slim") 
+                new LiteralToken("slim")
             };
 
             FunctionCallToken geometryPointNonGeometryPolyToken = new FunctionCallToken("geo.intersects", geometryPointNonGeometryPoly);
