@@ -92,7 +92,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         }
 
         [Fact]
-        public void BindApplyWithNonExistingPropertyShouldThrowPropertyException()
+        public void BindApplyWithFilterNonExistingPropertyShouldThrowPropertyException()
         {
             var tokens = _parser.ParseApply("filter(IDx eq 0)");
             var metadataBiner = new MetadataBinder(_bindingState);
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         }
 
         [Fact]
-        public void BindApplyWithAggregateNonExistingOpenPropertyShouldThrowOpenPropertyException()
+        public void BindApplyWithAggregateFilterOnNonExistingOpenPropertyShouldThrowOpenPropertyException()
         {
             var tokens = _parser.ParseApply("aggregate($count as Ct)/filter(Cxt eq 0)");
 
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         }
 
         [Fact]
-        public void BindApplyWithGroupByNonExistingOpenPropertyShouldThrowOpenPropertyException()
+        public void BindApplyWithGroupByFilterOnNonExistingOpenPropertyShouldThrowOpenPropertyException()
         {
             var tokens = _parser.ParseApply("groupby((ID))/filter(Cxt eq 0)");
 

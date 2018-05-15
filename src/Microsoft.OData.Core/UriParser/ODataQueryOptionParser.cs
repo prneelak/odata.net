@@ -384,6 +384,8 @@ namespace Microsoft.OData.UriParser
             if (applyClause != null)
             {
                 state.AggregatedPropertyNames = applyClause.GetLastAggregatedPropertyNames();
+                if(applyClause.Transformations.Any(x=>x.Kind==TransformationNodeKind.GroupBy || x.Kind==TransformationNodeKind.Aggregate))
+                   state.IsCollapsed = true;
             }
 
             MetadataBinder binder = new MetadataBinder(state);
@@ -470,6 +472,8 @@ namespace Microsoft.OData.UriParser
             if (applyClause != null)
             {
                 state.AggregatedPropertyNames = applyClause.GetLastAggregatedPropertyNames();
+                if (applyClause.Transformations.Any(x => x.Kind == TransformationNodeKind.GroupBy || x.Kind == TransformationNodeKind.Aggregate))
+                    state.IsCollapsed = true;
             }
 
             MetadataBinder binder = new MetadataBinder(state);
