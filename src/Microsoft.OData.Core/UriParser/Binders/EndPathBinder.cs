@@ -119,7 +119,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-               throw ExceptionUtil.CreatePropertyNotFoundException(endPathToken.Identifier, parentNode.TypeReference.FullName(), true);
+               throw ExceptionUtil.CreatePropertyNotFoundException(endPathToken.Identifier, parentNode.TypeReference.FullName(), state.IsCollapsed);
             }
         }
 
