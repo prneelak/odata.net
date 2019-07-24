@@ -1,0 +1,79 @@
+{
+  "name": "octobud-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "dependencies": {
+    "@octokit/rest": "^16.28.6",
+    "@types/debug": "^4.1.4",
+    "body-parser": "^1.19.0",
+    "connect-ensure-login": "^0.1.1",
+    "cookie-parser": "^1.4.4",
+    "debug": "^4.1.1",
+    "depnames": "^1.1.0",
+    "express": "^4.17.0",
+    "express-session": "^1.16.1",
+    "get-repo-package-json": "^2.0.0",
+    "github-url-to-object": "^4.0.4",
+    "got": "^9.6.0",
+    "isomorphic-fetch": "^2.2.1",
+    "mongoose": "^5.5.12",
+    "npm-run-all": "^4.1.5",
+    "passport": "^0.4.0",
+    "passport-github": "^1.1.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.0.3",
+    "react-router-dom": "^5.0.0",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "stream-to-string": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.17.0",
+    "@types/connect-ensure-login": "^0.1.4",
+    "@types/cookie-parser": "^1.4.1",
+    "@types/express": "^4.16.1",
+    "@types/express-session": "^1.15.12",
+    "@types/isomorphic-fetch": "0.0.35",
+    "@types/mongoose": "^5.5.5",
+    "@types/passport": "^1.0.0",
+    "@types/passport-github": "^1.1.5",
+    "@types/react": "^16.8.18",
+    "@types/react-dom": "^16.8.4",
+    "@types/react-redux": "^7.0.9",
+    "@types/react-router-dom": "^4.3.3",
+    "@types/redux": "^3.6.0",
+    "@types/stream-to-string": "^1.1.0",
+    "bundlesize": "^0.17.2",
+    "get-repo-package-json": "^2.0.0",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "nodemon": "^1.19.0",
+    "ts-loader": "^6.0.1",
+    "typescript": "^3.4.5",
+    "webpack": "^4.32.0",
+    "webpack-bundle-analyzer": "^3.3.2",
+    "webpack-cli": "^3.3.6",
+    "webpack-filter-warnings-plugin": "^1.2.1"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production webpack --progress",
+    "dev": "npm-run-all --parallel watch:server watch:build",
+    "watch:build": "webpack --watch --progress",
+    "watch:server": "nodemon --inspect dist/server.bundle.js",
+    "bundlesize": "bundlesize"
+  },
+  "bundlesize": [
+    {
+      "path": "./dist/js/app.bundle.js",
+      "maxSize": "170 kB"
+    },
+    {
+      "path": "./dist/js/lib.bundle.js",
+      "maxSize": "110 kB"
+    }
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
